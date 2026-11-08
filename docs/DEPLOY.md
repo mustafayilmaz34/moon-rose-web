@@ -19,7 +19,9 @@ Hesap açma ve giriş yapma işlemleri sizin hesabınızla yapılmalı.
 Bağlantıdan sonra her PR'a Vercel otomatik bir **önizleme linki** yorumu ekler. Müşteriye bu linki
 gönderebilirsiniz; değişiklik `main`'e birleşmeden görülebilir.
 
-Vercel, `*.vercel.app` önizleme adreslerine `X-Robots-Tag: noindex` ekler; Google bu adresleri dizine almaz.
+Vercel PR önizleme adreslerine kendisi `X-Robots-Tag: noindex` ekler, ama ana `moon-rose-web.vercel.app`
+adresine eklemez. Bu yüzden `vercel.json`, `*.vercel.app` ile biten her adrese `X-Robots-Tag: noindex`
+gönderir; Google bu adresleri dizine almaz. Gerçek alan adı (`moonroseclinic.com`) bu kuraldan etkilenmez.
 
 ## 3. Alan adı (Faz 5)
 

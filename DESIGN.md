@@ -66,7 +66,8 @@ Koyu/video zeminlerde metin `text-surface`; saydamlık için `/15`, `/40` gibi o
 - Kaydırma animasyonları uzun yazımla (`animation-name`, `animation-timeline: var(--scroll-view)`) yazılır — kısaltma
   `animation:` içinde `view()` geçersizdir ve derleyici birleştirirse animasyon sessizce kaybolur.
 - `prefers-reduced-motion: reduce` → hiçbir hareket yok, hero videosu oynamaz (kapak karesi).
-- Otomatik oynayan video için durdur/oynat butonu zorunlu (WCAG 2.2.2).
+- Hero videosunda durdur/oynat butonu **yok** — müşteri kararı (8 Kasım 2026). WCAG 2.2.2 (5 sn'den uzun otomatik
+  hareket) açısından bilinen bir sapma; video sessiz ve içerik taşımıyor. `prefers-reduced-motion`'da video oynamaz.
 
 ## Görseller
 

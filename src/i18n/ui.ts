@@ -47,7 +47,6 @@ const tr = {
   'info.phoneLabel': 'Telefon',
   'footer.note':
     'Sitedeki bilgiler yalnızca bilgilendirme amaçlıdır; tedavi kararı hekim muayenesiyle verilir.',
-  'a11y.pauseVideo': 'Videoyu durdur',
   'whatsapp.bubble': 'Randevu için bize yazın',
   'a11y.breadcrumb': 'Sayfa konumu',
   'treatments.lead':
@@ -68,7 +67,6 @@ const tr = {
   'notFound.title': 'Sayfa bulunamadı',
   'notFound.body': 'Aradığınız sayfa taşınmış ya da kaldırılmış olabilir.',
   'notFound.home': 'Ana sayfaya dön',
-  'a11y.playVideo': 'Videoyu oynat',
 } as const;
 
 export type UiKey = keyof typeof tr;
@@ -120,7 +118,6 @@ const en: Dictionary = {
   'info.phoneLabel': 'Phone',
   'footer.note':
     'Information on this site is for general purposes only; treatment decisions are made after a physician’s consultation.',
-  'a11y.pauseVideo': 'Pause video',
   'whatsapp.bubble': 'Message us to book',
   'a11y.breadcrumb': 'Breadcrumb',
   'treatments.lead':
@@ -141,7 +138,6 @@ const en: Dictionary = {
   'notFound.title': 'Page not found',
   'notFound.body': 'The page you are looking for may have been moved or removed.',
   'notFound.home': 'Back to home',
-  'a11y.playVideo': 'Play video',
 };
 
 const ar: Dictionary = {
@@ -188,7 +184,6 @@ const ar: Dictionary = {
 
   'info.phoneLabel': 'الهاتف',
   'footer.note': 'المعلومات الواردة في الموقع لأغراض التوعية فقط؛ ويُتخذ قرار العلاج بعد فحص الطبيب.',
-  'a11y.pauseVideo': 'إيقاف الفيديو',
   'whatsapp.bubble': 'راسلنا لحجز موعد',
   'a11y.breadcrumb': 'مسار التنقل',
   'treatments.lead':
@@ -209,7 +204,6 @@ const ar: Dictionary = {
   'notFound.title': 'الصفحة غير موجودة',
   'notFound.body': 'ربما تم نقل الصفحة التي تبحث عنها أو حذفها.',
   'notFound.home': 'العودة إلى الصفحة الرئيسية',
-  'a11y.playVideo': 'تشغيل الفيديو',
 };
 
 const dictionaries: Record<Locale, Dictionary> = { tr, en, ar };

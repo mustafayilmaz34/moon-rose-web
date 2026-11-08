@@ -74,27 +74,10 @@ const poster = await getImage({ src: heroPoster, width: 1600, format: 'webp' });
     </div>
   </div>
 
-  <!-- Bottom info row -->
-  <div class="motion-rise border-surface/20 border-t" style="--d: 600ms">
+  <!-- Bottom info row (md+; on phones the info bar and footer carry this) -->
+  <div class="motion-rise border-surface/20 hidden border-t md:block" style="--d: 600ms">
     <div class="mx-auto flex max-w-[1320px] items-center gap-6 px-6 py-5 lg:px-12">
-      <!-- WCAG 2.2.2: moving content longer than 5s needs a pause control. -->
-      <button
-        type="button"
-        data-hero-toggle
-        data-label-pause={t('a11y.pauseVideo')}
-        data-label-play={t('a11y.playVideo')}
-        aria-label={t('a11y.pauseVideo')}
-        hidden
-        class="border-surface/40 hover:border-surface grid size-10 shrink-0 place-items-center rounded-full border transition-colors"
-      >
-        <span data-icon="pause">
-          <Icon name="pause" />
-        </span>
-        <span data-icon="play" class="hidden">
-          <Icon name="play" />
-        </span>
-      </button>
-      <dl class="hidden flex-1 grid-cols-3 gap-8 text-sm md:grid">
+      <dl class="grid flex-1 grid-cols-3 gap-8 text-sm">
         <div>
           <dt class="text-[11px] font-semibold tracking-[0.18em] uppercase opacity-70">
             {t('info.addressLabel')}
@@ -126,31 +109,11 @@ const poster = await getImage({ src: heroPoster, width: 1600, format: 'webp' });
 
 <script>
   // Autoplay only when motion is allowed; otherwise the poster frame stays.
+  // No pause control by client decision (2026-11-08) — see DESIGN.md → Hareket.
   const video = document.querySelector<HTMLVideoElement>('[data-hero-video]');
-  const toggle = document.querySelector<HTMLButtonElement>('[data-hero-toggle]');
-  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  function render(playing: boolean) {
-    if (!toggle) return;
-    toggle.setAttribute('aria-label', (playing ? toggle.dataset.labelPause : toggle.dataset.labelPlay) ?? '');
-    toggle.querySelector('[data-icon="pause"]')?.classList.toggle('hidden', !playing);
-    toggle.querySelector('[data-icon="play"]')?.classList.toggle('hidden', playing);
-  }
-
-  if (video && toggle) {
-    video.addEventListener('play', () => render(true));
-    video.addEventListener('pause', () => render(false));
-    toggle.addEventListener('click', () => (video.paused ? video.play() : video.pause()));
-    if (!reduce.matches) {
-      video
-        .play()
-        .then(() => (toggle.hidden = false))
-        .catch(() => {
-          /* Autoplay blocked or codec unsupported: poster stays, no control needed. */
-        });
-    } else {
-      toggle.hidden = false;
-      render(false);
-    }
+  if (video && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    video.play().catch(() => {
+      /* Autoplay blocked or codec unsupported: the poster stays. */
+    });
   }
 </script>

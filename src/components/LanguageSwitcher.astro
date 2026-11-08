@@ -1,0 +1,31 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { locales, localeMeta, type Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  path?: string;
+}
+
+const { locale, path = '' } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<nav aria-label={t('a11y.languageSwitcher')}>
+  <ul class="flex gap-4">
+    {locales.map((l) => (
+      <li>
+        <a
+          href={getRelativeLocaleUrl(l, path)}
+          hreflang={l}
+          lang={l}
+          aria-current={l === locale ? 'true' : undefined}
+          class="aria-[current]:underline"
+        >
+          {localeMeta[l].label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</nav>

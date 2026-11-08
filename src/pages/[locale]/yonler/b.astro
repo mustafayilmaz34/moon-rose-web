@@ -1,0 +1,134 @@
+---
+// Phase 1 — Direction B "Gül tozu" (rose dust). Temporary review page.
+import '../../../styles/directions.css';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LanguageSwitcher from '../../../components/LanguageSwitcher.astro';
+import PhotoFrame from '../../../components/PhotoFrame.astro';
+import DirectionBar from '../../../components/DirectionBar.astro';
+import { locales, type Locale } from '../../../i18n/config';
+import { useTranslations, treatmentKeys } from '../../../i18n/ui';
+import { whatsappUrl } from '../../../config/site';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = useTranslations(locale);
+const path = 'yonler/b/';
+const nav = ['nav.about', 'nav.treatments', 'nav.faq', 'nav.contact'] as const;
+---
+
+<BaseLayout locale={locale} path={path} title="Yön B">
+  <div slot="header" class="theme-b">
+    <DirectionBar locale={locale} current="b" />
+    <header class="bg-surface text-ink font-body">
+      <div class="mx-auto flex max-w-[1320px] items-center justify-between gap-6 px-6 py-5 lg:px-12">
+        <a href="#" class="font-display text-[1.65rem] leading-none font-[420]" lang="en" dir="ltr">
+          Moonrose<span class="text-accent">.</span>
+        </a>
+        <nav aria-label={t('a11y.mainNav')} class="hidden lg:block">
+          <ul class="flex gap-9 text-[15px]">
+            {nav.map((key) => (
+              <li>
+                <a href="#" class="hover:text-accent transition-colors">
+                  {t(key)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div class="flex items-center gap-6 text-sm">
+          <div class="hidden sm:block">
+            <LanguageSwitcher locale={locale} path={path} />
+          </div>
+          <a
+            href={whatsappUrl}
+            class="bg-accent text-surface hover:bg-ink rounded-full px-5 py-2.5 transition-colors"
+          >
+            {t('cta.appointment')}
+          </a>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <div class="theme-b bg-surface text-ink font-body">
+    <section class="mx-auto max-w-[1320px] px-6 pt-6 pb-20 lg:px-12 lg:pt-10">
+      <div class="grid items-end lg:grid-cols-12">
+        <PhotoFrame
+          label={t('photo.placeholderClinic')}
+          class="aspect-[4/5] sm:aspect-[16/11] lg:col-span-8 lg:col-start-1 lg:row-start-1 lg:aspect-[7/6]"
+        />
+        <div class="bg-surface relative -mt-16 me-6 pt-8 pe-6 sm:-mt-24 sm:max-w-[34rem] sm:pt-10 sm:pe-10 lg:col-span-5 lg:col-start-7 lg:row-start-1 lg:mt-0 lg:mb-14 lg:max-w-none lg:p-12">
+          <p class="text-accent text-sm">{t('hero.eyebrow')}</p>
+          <h1 class="font-display mt-5 text-[clamp(2.5rem,5.2vw,4.75rem)] leading-[1.04] font-[360] tracking-[-0.015em] rtl:leading-[1.35]">
+            {t('hero.title')}
+          </h1>
+          <p class="text-muted mt-7 text-[1.0625rem] leading-relaxed">{t('hero.lead')}</p>
+          <div class="mt-9 flex flex-wrap items-center gap-x-8 gap-y-5">
+            <a
+              href={whatsappUrl}
+              class="bg-ink text-surface hover:bg-accent rounded-full px-7 py-3.5 text-sm transition-colors"
+            >
+              {t('cta.appointment')}
+            </a>
+            <a
+              href="#tedaviler"
+              class="decoration-accent text-sm underline decoration-1 underline-offset-[6px]"
+            >
+              {t('cta.treatments')}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-panel">
+      <dl class="mx-auto grid max-w-[1320px] gap-y-6 px-6 py-10 sm:grid-cols-[1.2fr_1.4fr_1fr] sm:gap-x-10 lg:px-12">
+        <div>
+          <dt class="text-accent text-sm">{t('info.hoursLabel')}</dt>
+          <dd class="mt-1.5">
+            {t('info.hours')} <span class="text-muted">· {t('info.hoursNote')}</span>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-accent text-sm">{t('info.addressLabel')}</dt>
+          <dd class="mt-1.5">{t('info.address')}</dd>
+        </div>
+        <div>
+          <dt class="text-accent text-sm">{t('info.contactLabel')}</dt>
+          <dd class="mt-1.5">
+            <a href={whatsappUrl} class="decoration-accent underline underline-offset-4">
+              {t('info.contact')}
+            </a>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="tedaviler" class="mx-auto max-w-[1320px] px-6 py-20 lg:px-12 lg:py-28">
+      <div class="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+        <h2 class="font-display text-4xl font-[360] lg:text-6xl">{t('nav.treatments')}</h2>
+        <p class="text-muted max-w-[34ch] leading-relaxed">{t('treatments.intro')}</p>
+      </div>
+      <ul class="mt-14 grid gap-px overflow-hidden sm:grid-cols-2">
+        {treatmentKeys.map((key, i) => (
+          <li class="border-line border-t">
+            <a href="#" class="group flex items-start gap-6 py-8 sm:pe-10">
+              <span class="font-display text-accent/70 w-10 shrink-0 text-3xl leading-none font-[300] tabular-nums">
+                {i + 1}
+              </span>
+              <span>
+                <span class="font-display group-hover:text-accent block text-2xl transition-colors">
+                  {t(`treat.${key}`)}
+                </span>
+                <span class="text-muted mt-2 block">{t(`treat.${key}.desc`)}</span>
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  </div>
+</BaseLayout>

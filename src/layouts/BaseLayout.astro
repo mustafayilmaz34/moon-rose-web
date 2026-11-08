@@ -1,0 +1,47 @@
+---
+import '../styles/global.css';
+import { getAbsoluteLocaleUrl } from 'astro:i18n';
+import { locales, localeMeta, defaultLocale, type Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  /** Path after the locale prefix, e.g. "tedaviler/botoks/". Used for hreflang alternates. */
+  path?: string;
+}
+
+const { locale, title, description, path = '' } = Astro.props;
+const t = useTranslations(locale);
+const { dir } = localeMeta[locale];
+const pageTitle = title ? `${title} | ${t('meta.siteName')}` : t('meta.siteName');
+const pageDescription = description ?? t('meta.description');
+---
+
+<!doctype html>
+<html lang={locale} dir={dir}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDescription} />
+    <link rel="canonical" href={getAbsoluteLocaleUrl(locale, path)} />
+    {locales.map((l) => (
+      <link rel="alternate" hreflang={localeMeta[l].hreflang} href={getAbsoluteLocaleUrl(l, path)} />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl(defaultLocale, path)} />
+  </head>
+  <body class="bg-surface text-ink font-body antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4">
+      {t('a11y.skipToContent')}
+    </a>
+    <slot name="header" />
+    <main id="main">
+      <slot />
+    </main>
+    <slot name="footer" />
+  </body>
+</html>

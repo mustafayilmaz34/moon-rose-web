@@ -1,0 +1,121 @@
+/*
+ * Phase 1 — two candidate design directions, scoped by a wrapper class.
+ * Temporary: the chosen direction's values move into global.css @theme in Phase 2,
+ * and this file plus src/pages/[locale]/yonler/ are deleted.
+ */
+@import '@fontsource/gloock';
+@import '@fontsource-variable/hanken-grotesk';
+@import '@fontsource/amiri/400.css';
+@import '@fontsource/amiri/700.css';
+@import '@fontsource/ibm-plex-sans-arabic/400.css';
+@import '@fontsource/ibm-plex-sans-arabic/500.css';
+@import '@fontsource-variable/fraunces';
+@import '@fontsource-variable/figtree';
+@import '@fontsource-variable/el-messiri';
+@import '@fontsource-variable/fraunces/opsz-italic.css';
+@import '@fontsource-variable/manrope';
+
+/* A — "Ay ışığı": stone, night blue, silver-rose. Editorial, high-contrast serif. */
+.theme-a {
+  --color-surface: #f3f0eb;
+  --color-panel: #e8e3db;
+  --color-ink: #141c33;
+  --color-muted: #545b6b;
+  --color-accent: #9c7c7f;
+  --color-line: #cfc8bd;
+  --font-display: 'Gloock', ui-serif, Georgia, serif;
+  --font-body: 'Hanken Grotesk Variable', ui-sans-serif, system-ui, sans-serif;
+}
+html:lang(ar) .theme-a {
+  --font-display: 'Amiri', ui-serif, serif;
+  --font-body: 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* B — "Gül tozu": warm cream, deep burgundy-brown, terracotta rose. Soft serif. */
+.theme-b {
+  --color-surface: #f5eee6;
+  --color-panel: #ebdfd2;
+  --color-ink: #3a1f24;
+  --color-muted: #6f5557;
+  --color-accent: #a4574c;
+  --color-line: #dccbbb;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --font-body: 'Figtree Variable', ui-sans-serif, system-ui, sans-serif;
+}
+html:lang(ar) .theme-b {
+  --font-display: 'El Messiri Variable', ui-serif, serif;
+  --font-body: 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* C — "Klinik mavisi": close to the current site (navy, petrol, ice blue, italic serif), cleaned up. */
+.theme-c {
+  --color-surface: #ffffff;
+  --color-panel: #eaf2f6;
+  --color-ink: #0f2a4a;
+  --color-muted: #5a6b7d;
+  --color-accent: #0d5c78;
+  --color-line: #d6e3ea;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --font-body: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+}
+html:lang(ar) .theme-c {
+  --font-display: 'El Messiri Variable', ui-serif, serif;
+  --font-body: 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+}
+/* Arabic has no italic; keep headings upright there. */
+html:lang(ar) .theme-c .italic {
+  font-style: normal;
+}
+
+/*
+ * Direction C motion. Calm and sparse: hero entrance over the background video,
+ * scroll-linked reveal/parallax. Everything is off for prefers-reduced-motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes c-rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .theme-c .c-rise {
+    animation: c-rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--d, 0ms);
+  }
+
+  @supports (animation-timeline: view()) {
+    @keyframes c-reveal {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+    @keyframes c-parallax {
+      from {
+        transform: translateY(6%) scale(1.12);
+      }
+      to {
+        transform: translateY(-6%) scale(1.12);
+      }
+    }
+    .theme-c .c-reveal {
+      animation: c-reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 5% entry 45%;
+    }
+    .theme-c .c-parallax {
+      animation: c-parallax linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}

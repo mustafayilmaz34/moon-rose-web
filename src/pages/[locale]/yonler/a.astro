@@ -1,0 +1,142 @@
+---
+// Phase 1 — Direction A "Ay ışığı" (moonlight). Temporary review page.
+import '../../../styles/directions.css';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import LanguageSwitcher from '../../../components/LanguageSwitcher.astro';
+import PhotoFrame from '../../../components/PhotoFrame.astro';
+import DirectionBar from '../../../components/DirectionBar.astro';
+import { locales, type Locale } from '../../../i18n/config';
+import { useTranslations, treatmentKeys } from '../../../i18n/ui';
+import { whatsappUrl } from '../../../config/site';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = useTranslations(locale);
+const path = 'yonler/a/';
+const nav = ['nav.about', 'nav.treatments', 'nav.faq', 'nav.contact'] as const;
+---
+
+<BaseLayout locale={locale} path={path} title="Yön A">
+  <div slot="header" class="theme-a">
+    <DirectionBar locale={locale} current="a" />
+    <header class="bg-surface text-ink font-body">
+      <div class="border-line mx-auto flex max-w-[1320px] items-center justify-between gap-6 border-b px-6 py-6 lg:px-12">
+        <a href="#" class="flex items-baseline gap-3" lang="en" dir="ltr">
+          <span class="font-display text-2xl leading-none">Moonrose</span>
+          <span class="text-muted text-[10px] tracking-[0.35em] uppercase">Clinic</span>
+        </a>
+        <nav aria-label={t('a11y.mainNav')} class="hidden lg:block">
+          <ul class="flex gap-10 text-sm">
+            {nav.map((key) => (
+              <li>
+                <a href="#" class="hover:text-accent transition-colors">
+                  {t(key)}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <div class="flex items-center gap-8 text-sm">
+          <div class="hidden sm:block">
+            <LanguageSwitcher locale={locale} path={path} />
+          </div>
+          <a href={whatsappUrl} class="border-ink border-b pb-0.5">
+            {t('cta.appointment')}
+          </a>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  <div class="theme-a bg-surface text-ink font-body">
+    <section class="mx-auto max-w-[1320px] px-6 pt-14 pb-16 lg:px-12 lg:pt-24">
+      <div class="grid gap-y-12 lg:grid-cols-12 lg:gap-x-16">
+        <div class="flex flex-col justify-end lg:col-span-7">
+          <p class="text-muted text-xs tracking-[0.25em] uppercase">{t('hero.eyebrow')}</p>
+          <h1 class="font-display mt-8 max-w-[12ch] text-[clamp(2.75rem,7.2vw,6.75rem)] leading-[0.98] tracking-[-0.01em] rtl:leading-[1.3]">
+            {t('hero.title')}
+          </h1>
+          <p class="text-muted mt-10 max-w-[46ch] text-lg leading-relaxed">{t('hero.lead')}</p>
+          <div class="mt-12 flex flex-wrap items-center gap-x-10 gap-y-6">
+            <a
+              href={whatsappUrl}
+              class="bg-ink text-surface hover:bg-accent px-8 py-4 text-sm tracking-wide transition-colors"
+            >
+              {t('cta.appointment')}
+            </a>
+            <a href="#tedaviler" class="group inline-flex items-center gap-3 text-sm">
+              {t('cta.treatments')}
+              <span
+                aria-hidden="true"
+                class="inline-block transition-transform group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1"
+              >
+                →
+              </span>
+            </a>
+          </div>
+        </div>
+        <PhotoFrame label={t('photo.placeholder')} class="aspect-[4/5] lg:col-span-5" />
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-[1320px] px-6 lg:px-12">
+      <dl class="border-line grid border-t sm:grid-cols-3">
+        <div class="py-7 sm:pe-8">
+          <dt class="text-muted text-xs tracking-[0.2em] uppercase">{t('info.hoursLabel')}</dt>
+          <dd class="mt-3">{t('info.hours')}</dd>
+          <dd class="text-muted mt-1 text-sm">{t('info.hoursNote')}</dd>
+        </div>
+        <div class="border-line border-t py-7 sm:border-t-0 sm:border-s sm:px-8">
+          <dt class="text-muted text-xs tracking-[0.2em] uppercase">{t('info.addressLabel')}</dt>
+          <dd class="mt-3">{t('info.address')}</dd>
+        </div>
+        <div class="border-line border-t py-7 sm:border-t-0 sm:border-s sm:ps-8">
+          <dt class="text-muted text-xs tracking-[0.2em] uppercase">{t('info.contactLabel')}</dt>
+          <dd class="mt-3">
+            <a href={whatsappUrl} class="hover:text-accent">
+              {t('info.contact')}
+            </a>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section id="tedaviler" class="border-line mt-16 border-t">
+      <div class="mx-auto grid max-w-[1320px] gap-y-10 px-6 py-20 lg:grid-cols-12 lg:gap-x-16 lg:px-12 lg:py-28">
+        <div class="lg:col-span-4">
+          <h2 class="font-display text-4xl lg:text-5xl">{t('nav.treatments')}</h2>
+          <p class="text-muted mt-6 max-w-[32ch] leading-relaxed">{t('treatments.intro')}</p>
+        </div>
+        <ol class="lg:col-span-8">
+          {treatmentKeys.map((key, i) => (
+            <li class="border-line border-t last:border-b">
+              <a
+                href="#"
+                class="group grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 py-7 sm:grid-cols-[3.5rem_1fr_1fr_auto]"
+              >
+                <span class="text-accent col-start-1 row-start-1 text-sm tabular-nums">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <span class="font-display group-hover:text-accent col-start-2 row-start-1 text-2xl transition-colors lg:text-3xl">
+                  {t(`treat.${key}`)}
+                </span>
+                <span class="text-muted col-start-2 row-start-2 mt-2 text-sm sm:col-start-3 sm:row-start-1 sm:mt-0 sm:text-end">
+                  {t(`treat.${key}.desc`)}
+                </span>
+                <span
+                  aria-hidden="true"
+                  class="text-muted col-start-3 row-start-1 sm:col-start-4 transition-transform group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1"
+                >
+                  →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

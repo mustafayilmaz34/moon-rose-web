@@ -1,0 +1,17 @@
+---
+// Stand-in for a real photograph until the client delivers images.
+// Deliberately plain: a toned frame with a caption, never stock or generated imagery.
+interface Props {
+  label: string;
+  class?: string;
+}
+
+const { label, class: className = '' } = Astro.props;
+---
+
+<figure class:list={['bg-panel relative overflow-hidden', className]} aria-label={label}>
+  <svg class="text-line absolute inset-0 h-full w-full" aria-hidden="true">
+    <line x1="0" y1="100%" x2="100%" y2="0" stroke="currentColor" stroke-width="1"></line>
+  </svg>
+  <figcaption class="text-muted absolute start-4 bottom-4 text-xs tracking-wide">{label}</figcaption>
+</figure>

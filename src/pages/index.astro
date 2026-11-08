@@ -1,0 +1,7 @@
+---
+// Root "/" redirects to the default locale. Required by Astro's i18n routing.
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { defaultLocale } from '../i18n/config';
+
+return Astro.redirect(getRelativeLocaleUrl(defaultLocale));
+---

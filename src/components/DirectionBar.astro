@@ -1,0 +1,32 @@
+---
+// Phase 1 review chrome only (Turkish, untranslated on purpose). Deleted with the direction pages.
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import type { Locale } from '../i18n/config';
+
+interface Props {
+  locale: Locale;
+  current: 'a' | 'b' | 'c';
+}
+
+const { locale, current } = Astro.props;
+const items = [
+  { id: 'a', label: 'Yön A — Ay ışığı' },
+  { id: 'b', label: 'Yön B — Gül tozu' },
+  { id: 'c', label: 'Yön C — Klinik mavisi' },
+] as const;
+---
+
+<div class="bg-ink text-surface" lang="tr" dir="ltr">
+  <div class="mx-auto flex max-w-[1320px] items-center gap-6 px-6 py-2 text-xs lg:px-12">
+    <span class="opacity-60">Tasarım önizleme</span>
+    {items.map((item) => (
+      <a
+        href={getRelativeLocaleUrl(locale, `yonler/${item.id}/`)}
+        aria-current={item.id === current ? 'page' : undefined}
+        class="opacity-70 hover:opacity-100 aria-[current]:underline aria-[current]:opacity-100"
+      >
+        {item.label}
+      </a>
+    ))}
+  </div>
+</div>

@@ -1,0 +1,26 @@
+@import 'tailwindcss';
+
+/*
+ * Design tokens. Values are PLACEHOLDERS until the design direction is chosen
+ * in Phase 1 — see DESIGN.md. Components must use these tokens, never raw hex.
+ */
+@theme {
+  --color-surface: #faf7f4;
+  --color-panel: #efe9e3;
+  --color-ink: #1f1b1a;
+  --color-muted: #6b625e;
+  --color-accent: #b9837a;
+  --color-line: #ddd5ce;
+
+  --font-display: ui-serif, Georgia, serif;
+  --font-body: ui-sans-serif, system-ui, sans-serif;
+}
+
+/*
+ * Arabic font stack. Scoped to <html> only: a bare :lang(ar) would match every
+ * element and override font variables set by any wrapper further down the tree.
+ */
+html:lang(ar) {
+  --font-display: ui-serif, serif;
+  --font-body: ui-sans-serif, system-ui, sans-serif;
+}

@@ -55,9 +55,10 @@ for (const [name, byLocale] of Object.entries(pages)) {
       });
 
       test('language switcher leads to the same page in each language', async ({ page }) => {
-        // On small screens the switcher lives in the mobile menu.
+        // Desktop: languages sit in a dropdown; small screens: in the mobile menu.
         const menuButton = page.locator('[data-menu-open]');
         if (await menuButton.isVisible()) await menuButton.click();
+        else await page.locator('[aria-controls="language-menu"]').click();
         await expect(page.locator(`a[aria-current="true"][hreflang="${locale}"]:visible`)).toHaveCount(1);
         for (const l of locales) {
           await expect(page.locator(`a[hreflang="${l}"]:visible`)).toHaveAttribute('href', byLocale[l]);

@@ -2,9 +2,13 @@
 import Icon from './Icon.astro';
 import Logo from './Logo.astro';
 import LanguageSwitcher from './LanguageSwitcher.astro';
+import LanguageMenu from './LanguageMenu.astro';
+import TreatmentsMenu from './TreatmentsMenu.astro';
 import type { Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/ui';
 import { mainNav } from '../lib/nav';
+import { routeUrl } from '../i18n/routes';
+import { treatmentsFor } from '../lib/treatments';
 import type { Alternates } from '../i18n/routes';
 import { site, whatsappUrl } from '../config/site';
 
@@ -18,6 +22,7 @@ interface Props {
 const { locale, alternates, overlay = false } = Astro.props;
 const t = useTranslations(locale);
 const nav = mainNav(locale);
+const treatments = await treatmentsFor(locale);
 ---
 
 <!-- Info bar -->
@@ -61,22 +66,26 @@ const nav = mainNav(locale);
 
     <nav aria-label={t('a11y.mainNav')} class="hidden lg:block">
       <ul class="flex gap-9 text-[15px] font-semibold">
-        {nav.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              class="group-data-solid/hdr:hover:text-accent opacity-90 transition-opacity hover:opacity-100"
-            >
-              {t(item.key)}
-            </a>
-          </li>
-        ))}
+        {nav.map((item) =>
+          item.key === 'nav.treatments' ? (
+            <TreatmentsMenu locale={locale} />
+          ) : (
+            <li>
+              <a
+                href={item.href}
+                class="group-data-solid/hdr:hover:text-accent opacity-90 transition-opacity hover:opacity-100"
+              >
+                {t(item.key)}
+              </a>
+            </li>
+          ),
+        )}
       </ul>
     </nav>
 
     <div class="flex items-center gap-4 text-sm sm:gap-6">
       <div class="hidden lg:block">
-        <LanguageSwitcher locale={locale} alternates={alternates} />
+        <LanguageMenu locale={locale} alternates={alternates} />
       </div>
       <a
         href={whatsappUrl}
@@ -114,7 +123,7 @@ const nav = mainNav(locale);
   aria-label={t('a11y.mainNav')}
   class="bg-surface text-ink m-0 h-dvh max-h-none w-full max-w-none p-0 backdrop:bg-transparent"
 >
-  <div class="flex h-full flex-col px-6 pb-8">
+  <div class="flex min-h-full flex-col px-6 pb-8">
     <div class="flex h-20 items-center justify-between">
       <Logo locale={locale} tagClass="text-accent" />
       <button
@@ -128,18 +137,55 @@ const nav = mainNav(locale);
     </div>
     <nav aria-label={t('a11y.mainNav')} class="mt-8">
       <ul class="space-y-1">
-        {nav.map((item) => (
-          <li>
-            <a
-              href={item.href}
-              data-menu-link
-              class="font-display border-line flex items-center justify-between border-b py-4 text-3xl italic"
-            >
-              {t(item.key)}
-              <Icon name="arrow" class="text-accent size-5 rtl:-scale-x-100" />
-            </a>
-          </li>
-        ))}
+        {nav.map((item) =>
+          item.key === 'nav.treatments' ? (
+            <li>
+              <details class="group/sub border-line border-b">
+                <summary class="font-display flex cursor-pointer list-none items-center justify-between py-4 text-3xl italic [&::-webkit-details-marker]:hidden">
+                  {t(item.key)}
+                  <Icon
+                    name="chevron"
+                    class="text-accent size-5 transition-transform duration-300 group-open/sub:rotate-180"
+                  />
+                </summary>
+                <ul class="pb-4">
+                  {treatments.map((e) => (
+                    <li>
+                      <a
+                        href={routeUrl(locale, 'treatments', e.data.urlSlug)}
+                        data-menu-link
+                        class="text-muted hover:text-ink block py-2 ps-1 text-lg"
+                      >
+                        {e.data.title}
+                      </a>
+                    </li>
+                  ))}
+                  <li>
+                    <a
+                      href={item.href}
+                      data-menu-link
+                      class="text-accent mt-1 flex items-center gap-2 py-2 ps-1 text-sm font-semibold"
+                    >
+                      {t('treatments.all')}
+                      <Icon name="arrow" class="size-4 rtl:-scale-x-100" />
+                    </a>
+                  </li>
+                </ul>
+              </details>
+            </li>
+          ) : (
+            <li>
+              <a
+                href={item.href}
+                data-menu-link
+                class="font-display border-line flex items-center justify-between border-b py-4 text-3xl italic"
+              >
+                {t(item.key)}
+                <Icon name="arrow" class="text-accent size-5 rtl:-scale-x-100" />
+              </a>
+            </li>
+          ),
+        )}
       </ul>
     </nav>
     <div class="mt-auto space-y-6 pt-10">
@@ -177,6 +223,57 @@ const nav = mainNav(locale);
     );
     update(); // also covers reloads that restore a scrolled position
   }
+
+  // Dropdowns ([data-dropdown]): click/Enter toggles, hover opens on mouse devices,
+  // Esc closes and returns focus to the trigger, clicking or tabbing outside closes.
+  const dropdowns = [...document.querySelectorAll<HTMLElement>('[data-dropdown]')];
+  const parts = (root: HTMLElement) => ({
+    trigger: root.querySelector<HTMLButtonElement>('[data-dropdown-trigger]')!,
+    panel: root.querySelector<HTMLElement>('[data-dropdown-panel]')!,
+  });
+  const setOpen = (root: HTMLElement, open: boolean) => {
+    const { trigger, panel } = parts(root);
+    if (open) dropdowns.filter((d) => d !== root).forEach((d) => setOpen(d, false));
+    trigger.setAttribute('aria-expanded', String(open));
+    panel.hidden = !open;
+  };
+  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)');
+  for (const root of dropdowns) {
+    const { trigger } = parts(root);
+    let closeTimer: number | undefined;
+    // A mouse user hovers first, then clicks: that click must keep the menu open, not toggle it shut.
+    let openedByHover = false;
+    trigger.addEventListener('click', () => {
+      const open = trigger.getAttribute('aria-expanded') === 'true';
+      setOpen(root, openedByHover ? true : !open);
+      openedByHover = false;
+    });
+    root.addEventListener('mouseenter', () => {
+      if (!canHover.matches) return;
+      clearTimeout(closeTimer);
+      if (trigger.getAttribute('aria-expanded') !== 'true') openedByHover = true;
+      setOpen(root, true);
+    });
+    root.addEventListener('mouseleave', () => {
+      if (!canHover.matches) return;
+      closeTimer = window.setTimeout(() => {
+        setOpen(root, false);
+        openedByHover = false;
+      }, 180);
+    });
+    root.addEventListener('focusout', (e) => {
+      if (!root.contains(e.relatedTarget as Node | null)) setOpen(root, false);
+    });
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && trigger.getAttribute('aria-expanded') === 'true') {
+        setOpen(root, false);
+        trigger.focus();
+      }
+    });
+  }
+  document.addEventListener('click', (e) => {
+    for (const root of dropdowns) if (!root.contains(e.target as Node)) setOpen(root, false);
+  });
 
   // Mobile menu
   const menu = document.querySelector<HTMLDialogElement>('[data-menu]');

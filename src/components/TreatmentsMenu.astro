@@ -1,0 +1,62 @@
+---
+// Desktop "Tedaviler" dropdown, like the current site's. The list comes from the treatments
+// collection, so a new treatment file shows up here automatically.
+import Icon from './Icon.astro';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+import { routeUrl } from '../i18n/routes';
+import { treatmentsFor } from '../lib/treatments';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const entries = await treatmentsFor(locale);
+const panelId = 'treatments-menu';
+---
+
+<li class="relative" data-dropdown>
+  <button
+    type="button"
+    data-dropdown-trigger
+    aria-expanded="false"
+    aria-controls={panelId}
+    class="group-data-solid/hdr:hover:text-accent flex items-center gap-1.5 opacity-90 transition-opacity hover:opacity-100"
+  >
+    {t('nav.treatments')}
+    <Icon name="chevron" class="size-3.5 transition-transform [[aria-expanded=true]>&]:rotate-180" />
+  </button>
+  <div
+    id={panelId}
+    data-dropdown-panel
+    hidden
+    class="bg-surface text-ink border-line absolute start-1/2 top-full z-50 mt-5 w-[min(40rem,calc(100vw-3rem))] -translate-x-1/2 rounded-[22px] border p-3 font-normal shadow-[0_24px_50px_-24px_rgb(15_42_74/0.5)] rtl:translate-x-1/2"
+  >
+    <ul class="grid grid-cols-2 gap-1">
+      {entries.map((e) => (
+        <li>
+          <a
+            href={routeUrl(locale, 'treatments', e.data.urlSlug)}
+            class="hover:bg-panel group/item block rounded-2xl px-4 py-3 transition-colors"
+          >
+            <span class="font-display group-hover/item:text-accent block text-lg italic transition-colors">
+              {e.data.title}
+            </span>
+            <span class="text-muted mt-0.5 line-clamp-2 block text-[13px] leading-snug">
+              {e.data.summary}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <a
+      href={routeUrl(locale, 'treatments')}
+      class="bg-panel hover:bg-ink hover:text-surface mt-2 flex items-center justify-between rounded-2xl px-4 py-3 text-sm font-semibold transition-colors"
+    >
+      {t('treatments.all')}
+      <Icon name="arrow" class="size-4 rtl:-scale-x-100" />
+    </a>
+  </div>
+</li>

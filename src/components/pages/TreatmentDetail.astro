@@ -1,0 +1,98 @@
+---
+import { Image } from 'astro:assets';
+import { render } from 'astro:content';
+import PageHeader from '../PageHeader.astro';
+import TreatmentCard from '../TreatmentCard.astro';
+import AppointmentBand from '../home/AppointmentBand.astro';
+import Icon from '../Icon.astro';
+import type { Locale } from '../../i18n/config';
+import { useTranslations } from '../../i18n/ui';
+import { routeUrl } from '../../i18n/routes';
+import { treatmentImages, treatmentsFor, type Treatment } from '../../lib/treatments';
+import { whatsappUrl } from '../../config/site';
+
+interface Props {
+  locale: Locale;
+  entry: Treatment;
+}
+
+const { locale, entry } = Astro.props;
+const t = useTranslations(locale);
+const { key, title, summary, facts } = entry.data;
+const { Content } = await render(entry);
+const others = (await treatmentsFor(locale)).filter((e) => e.data.key !== key).slice(0, 3);
+---
+
+<PageHeader
+  locale={locale}
+  title={title}
+  lead={summary}
+  crumbs={[{ label: t('nav.treatments'), href: routeUrl(locale, 'treatments') }]}
+/>
+
+<section class="mx-auto max-w-[1320px] px-6 py-16 lg:px-12 lg:py-24">
+  <div class="grid gap-14 lg:grid-cols-12 lg:gap-16">
+    <article class="lg:col-span-7">
+      <div class="prose-clinic">
+        <Content />
+      </div>
+      <p class="border-line text-muted mt-14 border-t pt-6 text-sm leading-relaxed">
+        {t('treatment.disclaimer')}
+      </p>
+    </article>
+
+    <aside class="lg:col-span-5">
+      <div class="space-y-8 lg:sticky lg:top-28">
+        <div class="overflow-hidden rounded-[28px]">
+          <Image
+            src={treatmentImages[key]}
+            alt=""
+            widths={[400, 640, 880]}
+            sizes="(min-width: 1024px) 480px, 100vw"
+            loading="eager"
+            class="aspect-[4/3] w-full object-cover"
+          />
+        </div>
+        {facts.length > 0 && (
+          <div class="bg-panel rounded-2xl p-7">
+            <h2 class="text-accent text-xs font-semibold tracking-[0.22em] uppercase">
+              {t('treatment.facts')}
+            </h2>
+            <dl class="mt-5 divide-y divide-line">
+              {facts.map((f) => (
+                <div class="flex items-baseline justify-between gap-6 py-3">
+                  <dt class="text-muted text-sm">{f.label}</dt>
+                  <dd class="text-end font-semibold">{f.value}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        )}
+        <a
+          href={whatsappUrl}
+          class="bg-ink text-surface hover:bg-accent label-caps flex items-center justify-center gap-3 rounded-full px-8 py-4.5 transition-colors"
+        >
+          <Icon name="whatsapp" class="size-5" />
+          {t('cta.appointment')}
+        </a>
+      </div>
+    </aside>
+  </div>
+</section>
+
+{others.length > 0 && (
+  <section class="bg-panel">
+    <div class="mx-auto max-w-[1320px] px-6 py-16 lg:px-12 lg:py-24">
+      <h2 class="font-display text-3xl font-[380] italic lg:text-4xl">{t('treatment.others')}</h2>
+      <ul class="mt-10 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {others.map((e) => (
+          <li>
+            <TreatmentCard locale={locale} entry={e} />
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+)}
+
+<AppointmentBand locale={locale} />

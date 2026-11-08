@@ -1,0 +1,42 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+import { routeUrl } from '../i18n/routes';
+import { treatmentImages, type Treatment } from '../lib/treatments';
+
+interface Props {
+  locale: Locale;
+  entry: Treatment;
+  /** Heading level inside the page outline. */
+  as?: 'h2' | 'h3';
+}
+
+const { locale, entry, as: Heading = 'h3' } = Astro.props;
+const t = useTranslations(locale);
+const { key, urlSlug, title, summary } = entry.data;
+---
+
+<a href={routeUrl(locale, 'treatments', urlSlug)} class="group flex h-full flex-col">
+  <div class="overflow-hidden rounded-[22px]">
+    <Image
+      src={treatmentImages[key]}
+      alt=""
+      widths={[320, 480, 720]}
+      sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+      class="aspect-[5/4] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+    />
+  </div>
+  <Heading class="font-display group-hover:text-accent mt-6 text-2xl font-[420] italic transition-colors">
+    {title}
+  </Heading>
+  <p class="text-muted mt-2 leading-relaxed">{summary}</p>
+  <span class="text-accent mt-auto inline-flex items-center gap-2 pt-4 text-sm font-semibold">
+    {t('treatment.readMore')}
+    <Icon
+      name="arrow"
+      class="size-4 transition-transform group-hover:translate-x-1 rtl:-scale-x-100 rtl:group-hover:-translate-x-1"
+    />
+  </span>
+</a>

@@ -1,0 +1,68 @@
+---
+/*
+ * All inner pages in one route, because their first URL segment is localised
+ * (/tr/tedaviler/…, /en/treatments/…). Separate dynamic routes at the same depth would be ambiguous.
+ */
+import type { GetStaticPaths } from 'astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import TreatmentsIndex from '../../components/pages/TreatmentsIndex.astro';
+import TreatmentDetail from '../../components/pages/TreatmentDetail.astro';
+import ContactPage from '../../components/pages/ContactPage.astro';
+import PrivacyPage from '../../components/pages/PrivacyPage.astro';
+import { locales, type Locale } from '../../i18n/config';
+import { useTranslations } from '../../i18n/ui';
+import { alternatesFor, routePath, type Alternates } from '../../i18n/routes';
+import { treatmentAlternates, treatmentsFor, type Treatment } from '../../lib/treatments';
+
+type PageProps =
+  | { kind: 'treatments'; alternates: Alternates }
+  | { kind: 'treatment'; alternates: Alternates; entry: Treatment }
+  | { kind: 'contact'; alternates: Alternates }
+  | { kind: 'privacy'; alternates: Alternates };
+
+export const getStaticPaths = (async () => {
+  // Defined in here: Astro runs getStaticPaths separately from the rest of the page.
+  // routePath() ends with "/"; rest params must not.
+  const param = (path: string) => path.replace(/\/$/, '');
+  const paths = [];
+  for (const locale of locales) {
+    const page = (path: string, props: PageProps) => ({ params: { locale, page: param(path) }, props });
+    paths.push(
+      page(routePath(locale, 'treatments'), { kind: 'treatments', alternates: alternatesFor('treatments') }),
+    );
+    for (const entry of await treatmentsFor(locale)) {
+      paths.push(
+        page(routePath(locale, 'treatments', entry.data.urlSlug), {
+          kind: 'treatment',
+          entry,
+          alternates: await treatmentAlternates(entry.data.key),
+        }),
+      );
+    }
+    paths.push(page(routePath(locale, 'contact'), { kind: 'contact', alternates: alternatesFor('contact') }));
+    paths.push(page(routePath(locale, 'privacy'), { kind: 'privacy', alternates: alternatesFor('privacy') }));
+  }
+  return paths;
+}) satisfies GetStaticPaths;
+
+const locale = Astro.params.locale as Locale;
+const props = Astro.props as PageProps;
+const t = useTranslations(locale);
+
+const meta = {
+  treatments: { title: t('nav.treatments'), description: t('treatments.lead') },
+  treatment:
+    props.kind === 'treatment'
+      ? { title: props.entry.data.title, description: props.entry.data.summary }
+      : null,
+  contact: { title: t('contact.title'), description: t('contact.lead') },
+  privacy: { title: t('privacy.title'), description: undefined },
+}[props.kind];
+---
+
+<SiteLayout locale={locale} alternates={props.alternates} title={meta?.title} description={meta?.description}>
+  {props.kind === 'treatments' && <TreatmentsIndex locale={locale} />}
+  {props.kind === 'treatment' && <TreatmentDetail locale={locale} entry={props.entry} />}
+  {props.kind === 'contact' && <ContactPage locale={locale} />}
+  {props.kind === 'privacy' && <PrivacyPage locale={locale} />}
+</SiteLayout>

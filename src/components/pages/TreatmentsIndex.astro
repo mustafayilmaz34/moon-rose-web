@@ -1,0 +1,30 @@
+---
+import PageHeader from '../PageHeader.astro';
+import TreatmentCard from '../TreatmentCard.astro';
+import AppointmentBand from '../home/AppointmentBand.astro';
+import type { Locale } from '../../i18n/config';
+import { useTranslations } from '../../i18n/ui';
+import { treatmentsFor } from '../../lib/treatments';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const entries = await treatmentsFor(locale);
+---
+
+<PageHeader locale={locale} title={t('nav.treatments')} lead={t('treatments.lead')} />
+
+<section class="mx-auto max-w-[1320px] px-6 py-16 lg:px-12 lg:py-24">
+  <ul class="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+    {entries.map((entry) => (
+      <li class="motion-reveal">
+        <TreatmentCard locale={locale} entry={entry} as="h2" />
+      </li>
+    ))}
+  </ul>
+</section>
+
+<AppointmentBand locale={locale} />

@@ -1,0 +1,56 @@
+---
+// Intro band for inner pages: breadcrumb, eyebrow, italic title, lead.
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  eyebrow?: string;
+  lead?: string;
+  /** Intermediate crumbs between Home and the current page. */
+  crumbs?: { label: string; href: string }[];
+}
+
+const { locale, title, eyebrow, lead, crumbs = [] } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<section class="bg-panel">
+  <div class="mx-auto max-w-[1320px] px-6 pt-10 pb-14 lg:px-12 lg:pt-14 lg:pb-20">
+    <nav aria-label={t('a11y.breadcrumb')}>
+      <ol class="text-muted flex flex-wrap items-center gap-x-2 text-sm">
+        <li>
+          <a href={getRelativeLocaleUrl(locale)} class="hover:text-accent">
+            {t('nav.home')}
+          </a>
+        </li>
+        {crumbs.map((c) => (
+          <li class="flex items-center gap-x-2">
+            <span aria-hidden="true">/</span>
+            <a href={c.href} class="hover:text-accent">
+              {c.label}
+            </a>
+          </li>
+        ))}
+        <li class="flex items-center gap-x-2">
+          <span aria-hidden="true">/</span>
+          <span aria-current="page" class="text-ink">
+            {title}
+          </span>
+        </li>
+      </ol>
+    </nav>
+    {eyebrow && <p class="text-accent mt-10 text-xs font-semibold tracking-[0.22em] uppercase">{eyebrow}</p>}
+    <h1
+      class:list={[
+        'font-display text-[clamp(2.4rem,5.5vw,4.5rem)] leading-[1.05] font-[380] italic rtl:leading-[1.35]',
+        eyebrow ? 'mt-4' : 'mt-10',
+      ]}
+    >
+      {title}
+    </h1>
+    {lead && <p class="text-muted mt-6 max-w-[60ch] text-lg leading-relaxed">{lead}</p>}
+  </div>
+</section>

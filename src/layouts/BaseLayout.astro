@@ -3,16 +3,19 @@ import '../styles/global.css';
 import { getAbsoluteLocaleUrl } from 'astro:i18n';
 import { locales, localeMeta, defaultLocale, type Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/ui';
+import { sameAlternates, type Alternates } from '../i18n/routes';
 
 interface Props {
   locale: Locale;
   title?: string;
   description?: string;
-  /** Path after the locale prefix, e.g. "tedaviler/botoks/". Used for hreflang alternates. */
-  path?: string;
+  /** This page's path in every language (after the locale prefix). Drives canonical + hreflang. */
+  alternates?: Alternates;
+  /** Keep out of search results (404, legal drafts…). */
+  noindex?: boolean;
 }
 
-const { locale, title, description, path = '' } = Astro.props;
+const { locale, title, description, alternates = sameAlternates(''), noindex = false } = Astro.props;
 const t = useTranslations(locale);
 const { dir } = localeMeta[locale];
 const pageTitle = title ? `${title} | ${t('meta.siteName')}` : t('meta.siteName');
@@ -28,11 +31,16 @@ const pageDescription = description ?? t('meta.description');
     <link rel="icon" href="/favicon.ico" />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
-    <link rel="canonical" href={getAbsoluteLocaleUrl(locale, path)} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="canonical" href={getAbsoluteLocaleUrl(locale, alternates[locale])} />
     {locales.map((l) => (
-      <link rel="alternate" hreflang={localeMeta[l].hreflang} href={getAbsoluteLocaleUrl(l, path)} />
+      <link rel="alternate" hreflang={localeMeta[l].hreflang} href={getAbsoluteLocaleUrl(l, alternates[l])} />
     ))}
-    <link rel="alternate" hreflang="x-default" href={getAbsoluteLocaleUrl(defaultLocale, path)} />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={getAbsoluteLocaleUrl(defaultLocale, alternates[defaultLocale])}
+    />
   </head>
   <body class="bg-surface text-ink font-body antialiased">
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4">

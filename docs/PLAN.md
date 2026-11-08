@@ -39,15 +39,19 @@ Durum: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti (kullanıcı onaylad�
 
 ## Faz 3 — Sayfalar
 
-- [ ] Content collection: `treatments` (dil başına markdown, ortak slug)
-- [ ] Ana sayfa
-- [ ] Hakkımızda / Doktor
-- [ ] Tedaviler listesi + tedavi detay şablonu
-- [ ] 12 tedavi içeriği (TR → EN/AR taslak çeviri)
-- [ ] S.S.S.
-- [ ] İletişim (harita, çalışma saatleri, KVKK onaylı form)
-- [ ] KVKK & Gizlilik Politikası, Çerez politikası
-- [ ] 404 sayfası
+- [x] Dile göre adresler: `src/i18n/routes.ts` (`/tr/tedaviler/…`, `/en/treatments/…`); hreflang + dil seçici sayfanın
+      karşılığına gider. Tüm iç sayfalar tek rotada: `src/pages/[locale]/[...page].astro`
+- [x] Content collection `treatments` (dil başına markdown, ortak `key`, yerel `urlSlug`) ve `pages`
+- [x] Tedaviler listesi + detay şablonu (makale, kısa bilgiler, randevu, diğer uygulamalar)
+- [x] 6 tedavi metni (TR) — mevcut sitedeki bilgiler kullanılarak **yeniden yazıldı**, yönetmeliğe aykırı ifadeler yok;
+      EN/AR taslak (`translationReview: true`). Kaynak metinler: `docs/content-source/`
+- [x] S.S.S. (ana sayfa, `<details>`), `src/data/faq.ts`
+- [x] İletişim sayfası (WhatsApp, telefon, adres + "Haritada aç" bağlantısı)
+- [x] KVKK & Gizlilik (TR mevcut metinden uyarlandı; EN/AR taslak) — **veri sorumlusu teyidi ve hukuki kontrol bekliyor**
+- [x] 404 sayfası (3 dilde)
+- [ ] Diğer 5 tedavi (Yüz Germe, Yüz İnceltme, Lipoliz, Selülit, Cilt Gençleştirme) — müşteri onayıyla
+- [ ] İletişim formu — form servisi seçilince (Formspree / Resend) + KVKK onay kutusu
+- [ ] Gömülü harita — çerez onayı altyapısıyla birlikte (Faz 5)
 
 ## Faz 4 — Test ve cilalama
 

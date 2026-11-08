@@ -3,13 +3,18 @@ import { test, expect } from '@playwright/test';
 // Home page — motion must run normally and be fully off for reduced motion.
 const url = '/tr/';
 
-test('Motion: hero entrance runs when motion is allowed', async ({ page }) => {
+test('Motion: hero entrance runs when motion is allowed', async ({ page }, testInfo) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
   await page.goto(url);
   const names = await page.evaluate(() =>
     document.getAnimations().map((a) => (a as CSSAnimation).animationName),
   );
   expect(names).toContain('rise');
+  expect(names).toContain('wa-ring');
+  // Scroll-driven (view timeline) animations must actually attach — a bad build silently drops them.
+  expect(names).toEqual(expect.arrayContaining(['hero-media', 'hero-content', 'parallax', 'reveal']));
+  // The bubble only exists on wide screens.
+  if (testInfo.project.name === 'desktop') expect(names).toContain('wa-bubble');
 });
 
 test('Motion: reduced motion stops animations and keeps the video paused', async ({ page }) => {
@@ -44,4 +49,19 @@ test('Header: transparent only at the top, solid and pinned as soon as the page 
 
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(header).not.toHaveAttribute('data-solid');
+});
+
+test('WhatsApp: official icon on brand green, pulse stops after a few iterations', async ({ page }) => {
+  await page.goto(url);
+  const button = page.locator('a[href^="https://wa.me/"].fixed');
+  await expect(button).toBeVisible();
+  const ring = await button.locator('.motion-wa-ring').evaluate((el) => {
+    const a = el.getAnimations()[0];
+    return a ? a.effect?.getTiming().iterations : null;
+  });
+  expect(ring).toBe(3);
+  const bg = await button
+    .locator('.bg-whatsapp.relative')
+    .evaluate((el) => getComputedStyle(el).backgroundColor);
+  expect(bg).toBe('rgb(37, 211, 102)');
 });

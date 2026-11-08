@@ -12,14 +12,15 @@ Lacivert ve petrol mavisi güveni, buz mavisi zeminler ferahlığı, italik seri
 
 Bileşenler yalnızca bu token'ları kullanır (`bg-surface`, `text-ink`, `border-line`…). Ham hex yasak.
 
-| Token     | Değer     | Rol                                            |
-| --------- | --------- | ---------------------------------------------- |
-| `surface` | `#ffffff` | Sayfa zemini; koyu zeminlerde metin            |
-| `panel`   | `#eaf2f6` | Buz mavisi bölüm zemini (tedaviler)            |
-| `ink`     | `#0f2a4a` | Ana metin, birincil buton, bilgi şeridi, bant  |
-| `muted`   | `#5a6b7d` | İkincil metin                                  |
-| `accent`  | `#0d5c78` | Petrol mavisi — üst başlıklar, vurgu, WhatsApp |
-| `line`    | `#d6e3ea` | Ayraç çizgileri, kenarlıklar                   |
+| Token      | Değer     | Rol                                            |
+| ---------- | --------- | ---------------------------------------------- |
+| `surface`  | `#ffffff` | Sayfa zemini; koyu zeminlerde metin            |
+| `panel`    | `#eaf2f6` | Buz mavisi bölüm zemini (tedaviler)            |
+| `ink`      | `#0f2a4a` | Ana metin, birincil buton, bilgi şeridi, bant  |
+| `muted`    | `#5a6b7d` | İkincil metin                                  |
+| `accent`   | `#0d5c78` | Petrol mavisi — üst başlıklar, vurgu, WhatsApp |
+| `line`     | `#d6e3ea` | Ayraç çizgileri, kenarlıklar                   |
+| `whatsapp` | `#25d366` | Yalnızca WhatsApp butonu (Meta marka rengi)    |
 
 Koyu/video zeminlerde metin `text-surface`; saydamlık için `/15`, `/40` gibi opaklık ekleri kullanılır.
 
@@ -60,6 +61,10 @@ Koyu/video zeminlerde metin `text-surface`; saydamlık için `/15`, `/40` gibi o
 
 - Hero açılışı: `motion-rise` (+ `--d` gecikme), sırayla, 900ms.
 - Kaydırma: `motion-reveal` (kartlar, metin), `motion-parallax` (Hakkımızda fotoğrafı) — tarayıcının `view()` zaman çizelgesi.
+- Hero çıkışı: kaydırdıkça video `scale(1.12)`'ye büyür, metin yukarı kayıp solar (`motion-hero-media`, `motion-hero-content`).
+- WhatsApp: balon 1.6 sn sonra bir kez kayarak gelir; yeşil halka 3 kez nabız atar ve durur (sonsuz hareket yok).
+- Kaydırma animasyonları uzun yazımla (`animation-name`, `animation-timeline: var(--scroll-view)`) yazılır — kısaltma
+  `animation:` içinde `view()` geçersizdir ve derleyici birleştirirse animasyon sessizce kaybolur.
 - `prefers-reduced-motion: reduce` → hiçbir hareket yok, hero videosu oynamaz (kapak karesi).
 - Otomatik oynayan video için durdur/oynat butonu zorunlu (WCAG 2.2.2).
 

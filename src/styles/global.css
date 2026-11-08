@@ -20,6 +20,8 @@
   --color-muted: #5a6b7d;
   --color-accent: #0d5c78;
   --color-line: #d6e3ea;
+  /* Brand colour of WhatsApp — only for the WhatsApp button (Meta brand guidelines). */
+  --color-whatsapp: #25d366;
 
   --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
   --font-body: 'Montserrat Variable', ui-sans-serif, system-ui, sans-serif;
@@ -92,7 +94,46 @@ html {
     animation-delay: var(--d, 0ms);
   }
 
+  /* WhatsApp: the bubble slides in once, the ring pulses three times, then everything rests. */
+  @keyframes wa-bubble {
+    from {
+      opacity: 0;
+      transform: translateX(var(--wa-shift, 12px)) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes wa-ring {
+    from {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+  .motion-wa-bubble {
+    animation: wa-bubble 600ms cubic-bezier(0.22, 1, 0.36, 1) 1.6s both;
+  }
+  [dir='rtl'] .motion-wa-bubble {
+    --wa-shift: -12px;
+  }
+  .motion-wa-ring {
+    animation: wa-ring 1.8s cubic-bezier(0.22, 1, 0.36, 1) 2.2s 3 both;
+  }
+
   @supports (animation-timeline: view()) {
+    /*
+     * Longhands + a custom property on purpose: Lightning CSS would otherwise fold these into an
+     * `animation` shorthand containing view(), which is invalid CSS (the timeline is reset-only in the
+     * shorthand) and silently drops the whole declaration.
+     */
+    :root {
+      --scroll-view: view();
+    }
     @keyframes reveal {
       from {
         opacity: 0;
@@ -112,14 +153,45 @@ html {
       }
     }
     .motion-reveal {
-      animation: reveal linear both;
-      animation-timeline: view();
+      animation-name: reveal;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--scroll-view);
       animation-range: entry 5% entry 45%;
     }
     .motion-parallax {
-      animation: parallax linear both;
-      animation-timeline: view();
+      animation-name: parallax;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--scroll-view);
       animation-range: cover;
+    }
+
+    /* Hero exit: video slowly scales up while the copy drifts up and fades as the page scrolls. */
+    @keyframes hero-media {
+      to {
+        transform: scale(1.12);
+      }
+    }
+    @keyframes hero-content {
+      to {
+        opacity: 0;
+        transform: translateY(-56px);
+      }
+    }
+    .motion-hero-media {
+      animation-name: hero-media;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--scroll-view);
+      animation-range: exit 0% exit 100%;
+    }
+    .motion-hero-content {
+      animation-name: hero-content;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--scroll-view);
+      animation-range: exit 0% exit 70%;
     }
   }
 }

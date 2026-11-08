@@ -22,7 +22,7 @@ const poster = await getImage({ src: heroPoster, width: 1600, format: 'webp' });
 >
   <video
     data-hero-video
-    class="absolute inset-0 -z-20 h-full w-full object-cover"
+    class="motion-hero-media absolute inset-0 -z-20 h-full w-full object-cover"
     muted
     loop
     playsinline
@@ -40,7 +40,7 @@ const poster = await getImage({ src: heroPoster, width: 1600, format: 'webp' });
     <div class="from-ink/75 to-ink/0 absolute inset-x-0 bottom-0 h-56 bg-gradient-to-t"></div>
   </div>
 
-  <div class="flex flex-1 items-center justify-center px-6 pt-28 pb-16">
+  <div class="motion-hero-content flex flex-1 items-center justify-center px-6 pt-28 pb-16">
     <div class="mx-auto max-w-[56rem] text-center">
       <p class="motion-rise text-xs font-semibold tracking-[0.18em] uppercase opacity-85 sm:tracking-[0.28em]">
         {t('hero.eyebrow')}

@@ -30,3 +30,6 @@ playwright/.cache/
 
 # local claude settings
 .claude/settings.local.json
+
+# lighthouse ci
+.lighthouseci/

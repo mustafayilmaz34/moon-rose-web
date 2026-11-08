@@ -11,9 +11,11 @@ interface Props {
   entry: Treatment;
   /** Heading level inside the page outline. */
   as?: 'h2' | 'h3';
+  /** Above-the-fold card: load its image immediately and first (it can be the page's LCP). */
+  priority?: boolean;
 }
 
-const { locale, entry, as: Heading = 'h3' } = Astro.props;
+const { locale, entry, as: Heading = 'h3', priority = false } = Astro.props;
 const t = useTranslations(locale);
 const { key, urlSlug, title, summary } = entry.data;
 ---
@@ -25,6 +27,8 @@ const { key, urlSlug, title, summary } = entry.data;
       alt=""
       widths={[320, 480, 720]}
       sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+      loading={priority ? 'eager' : 'lazy'}
+      fetchpriority={priority ? 'high' : 'auto'}
       class="aspect-[5/4] w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
     />
   </div>

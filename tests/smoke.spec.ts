@@ -65,6 +65,20 @@ for (const [name, byLocale] of Object.entries(pages)) {
         }
       });
 
+      test('has a social card and valid clinic structured data', async ({ page }) => {
+        await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+          'content',
+          /^https:\/\/.+\.jpg$/,
+        );
+        await expect(page.locator('meta[property="og:title"]')).toHaveAttribute('content', /.+/);
+        const types = await page
+          .locator('script[type="application/ld+json"]')
+          .evaluateAll((els) => els.map((el) => JSON.parse(el.textContent ?? '{}')['@type']));
+        expect(types).toContain('MedicalClinic');
+        if (name === 'home') expect(types).toContain('FAQPage');
+        if (name !== 'home') expect(types).toContain('BreadcrumbList');
+      });
+
       test('has no horizontal overflow', async ({ page }) => {
         const overflow = await page.evaluate(
           () => document.documentElement.scrollWidth - document.documentElement.clientWidth,

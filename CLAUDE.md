@@ -33,6 +33,8 @@ Astro 7 (statik) · TypeScript strict · Tailwind CSS v4 · `@astrojs/sitemap` �
 
 ## Kurallar
 
+- **Paket ekleme:** CI ve Vercel Node 22 / npm 10 kullanır; yerel npm 11'in kilit dosyasını npm 10 reddedebilir.
+  Paket ekledikten/kaldırdıktan sonra `npx npm@10 install` çalıştırıp `package-lock.json`'ı öyle commit et.
 - **Dil ekleme:** `src/i18n/config.ts` + `astro.config.mjs` + `ui.ts`'e sözlük. Başka yere dokunma.
 - **RTL:** Yalnızca mantıksal Tailwind sınıfları: `ms-/me-`, `ps-/pe-`, `start-/end-`, `text-start/end`.
   `ml-/mr-/pl-/pr-/left-/right-/text-left/text-right` **yasak**. Yöne bağlı ikonlar `rtl:-scale-x-100`.

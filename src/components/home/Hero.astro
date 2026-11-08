@@ -1,7 +1,7 @@
 ---
 // Full-bleed video hero. The header floats over it (SiteLayout overlayHeader).
 // Video: client's existing asset, generated with Google Veo — the watermark stays visible; never crop it out.
-import { getImage } from 'astro:assets';
+import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
 import type { Locale } from '../../i18n/config';
 import { useTranslations } from '../../i18n/ui';
@@ -13,25 +13,38 @@ interface Props {
 }
 
 const t = useTranslations(Astro.props.locale);
-const poster = await getImage({ src: heroPoster, width: 1600, format: 'webp' });
 ---
 
 <section
   data-hero
   class="text-surface relative isolate -mt-20 flex min-h-[100svh] flex-col overflow-hidden lg:min-h-[min(100svh,920px)]"
 >
-  <video
-    data-hero-video
-    class="motion-hero-media absolute inset-0 -z-20 h-full w-full object-cover"
-    muted
-    loop
-    playsinline
-    preload="metadata"
-    poster={poster.src}
-    aria-hidden="true"
-  >
-    <source src="/media/hero-loop.mp4" type="video/mp4" />
-  </video>
+  <!--
+    The poster frame is a real, responsive, high-priority <img> (the page's LCP element) rather than
+    the video's poster attribute, which browsers discover late and fetch at low priority.
+    The video sits on top and covers it once it plays.
+  -->
+  <div class="motion-hero-media absolute inset-0 -z-20" aria-hidden="true">
+    <Image
+      src={heroPoster}
+      alt=""
+      widths={[640, 960, 1280, 1920]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      class="absolute inset-0 h-full w-full object-cover"
+    />
+    <video
+      data-hero-video
+      class="absolute inset-0 h-full w-full object-cover"
+      muted
+      loop
+      playsinline
+      preload="metadata"
+    >
+      <source src="/media/hero-loop.mp4" type="video/mp4" />
+    </video>
+  </div>
   <!-- Legibility scrim: darker top (nav), soft vignette behind the text, darker bottom (info row). -->
   <div class="absolute inset-0 -z-10" aria-hidden="true">
     <div class="from-ink/55 to-ink/0 absolute inset-x-0 top-0 h-40 bg-gradient-to-b"></div>

@@ -1,0 +1,61 @@
+---
+// Desktop language dropdown. Scales to any number of languages (list comes from i18n/config).
+// Behaviour (hover/click/Esc/outside click) lives in SiteHeader's dropdown script: [data-dropdown].
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Icon from './Icon.astro';
+import { locales, localeMeta, type Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+import type { Alternates } from '../i18n/routes';
+
+interface Props {
+  locale: Locale;
+  alternates: Alternates;
+}
+
+const { locale, alternates } = Astro.props;
+const t = useTranslations(locale);
+const panelId = 'language-menu';
+---
+
+<div class="relative" data-dropdown>
+  <button
+    type="button"
+    data-dropdown-trigger
+    aria-expanded="false"
+    aria-controls={panelId}
+    class="flex items-center gap-2 rounded-full py-2 text-sm font-semibold opacity-90 transition-opacity hover:opacity-100"
+  >
+    <Icon name="globe" class="size-[18px]" />
+    <!-- Name = visible text + hidden prefix ("Dil seçimi: TR"), so voice control can say what it sees. -->
+    <span class="sr-only">{t('a11y.languageSwitcher')}: </span>
+    <span>{locale.toUpperCase()}</span>
+    <Icon name="chevron" class="size-3.5 transition-transform [[aria-expanded=true]>&]:rotate-180" />
+  </button>
+  <div
+    id={panelId}
+    data-dropdown-panel
+    hidden
+    class="bg-surface text-ink border-line absolute end-0 top-full z-50 mt-3 min-w-52 rounded-2xl border p-2 shadow-[0_18px_40px_-20px_rgb(15_42_74/0.45)]"
+  >
+    <nav aria-label={t('a11y.languageSwitcher')}>
+      <ul>
+        {locales.map((l) => (
+          <li>
+            <a
+              href={getRelativeLocaleUrl(l, alternates[l])}
+              hreflang={l}
+              lang={l}
+              aria-current={l === locale ? 'true' : undefined}
+              class="hover:bg-panel aria-[current]:text-accent flex items-center justify-between gap-6 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors"
+            >
+              {localeMeta[l].label}
+              <span class="text-muted text-xs font-semibold" aria-hidden="true">
+                {l.toUpperCase()}
+              </span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</div>

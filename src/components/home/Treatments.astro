@@ -1,0 +1,54 @@
+---
+// Treatment cards. Not links yet — detail pages arrive in Phase 3 (content collection).
+import { Image } from 'astro:assets';
+import type { Locale } from '../../i18n/config';
+import { useTranslations, treatmentKeys } from '../../i18n/ui';
+import { sectionIds } from '../../lib/nav';
+// TEMPORARY stock images from the current site — licence to be confirmed (docs/CONTENT.md).
+import botoxImg from '../../assets/legacy/2-botoks.jpeg';
+import fillerImg from '../../assets/legacy/1-dolgu.jpeg';
+import mesoImg from '../../assets/legacy/doktor-salih-gul-min.jpg';
+import pigmentImg from '../../assets/legacy/3-yuz-germe.jpeg';
+import threadImg from '../../assets/legacy/11-ip-aski.jpeg';
+import exosomeImg from '../../assets/legacy/12-eksozom.jpeg';
+
+interface Props {
+  locale: Locale;
+}
+
+const t = useTranslations(Astro.props.locale);
+const images = {
+  botox: botoxImg,
+  filler: fillerImg,
+  meso: mesoImg,
+  pigment: pigmentImg,
+  thread: threadImg,
+  exosome: exosomeImg,
+};
+---
+
+<section id={sectionIds.treatments} class="bg-panel">
+  <div class="mx-auto max-w-[1320px] px-6 py-20 lg:px-12 lg:py-28">
+    <h2 class="font-display text-4xl font-[380] italic lg:text-6xl">{t('nav.treatments')}</h2>
+    <p class="text-muted mt-5 max-w-[40ch] leading-relaxed">{t('treatments.intro')}</p>
+    <ul class="mt-14 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+      {treatmentKeys.map((key) => (
+        <li class="motion-reveal">
+          <article>
+            <div class="overflow-hidden rounded-[22px]">
+              <Image
+                src={images[key]}
+                alt=""
+                widths={[320, 480, 720]}
+                sizes="(min-width: 1024px) 400px, (min-width: 640px) 50vw, 100vw"
+                class="aspect-[5/4] w-full object-cover"
+              />
+            </div>
+            <h3 class="font-display mt-6 text-2xl font-[420] italic">{t(`treat.${key}`)}</h3>
+            <p class="text-muted mt-2">{t(`treat.${key}.desc`)}</p>
+          </article>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

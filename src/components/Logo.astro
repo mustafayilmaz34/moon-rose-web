@@ -1,0 +1,25 @@
+---
+// Text wordmark until the client supplies a vector logo (docs/CONTENT.md, question 5).
+// The visible text is the accessible name ("Moonrose Clinic") — no aria-label, so they can't drift apart.
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import type { Locale } from '../i18n/config';
+
+interface Props {
+  locale: Locale;
+  /** Colour of the "CLINIC" tag; inherits text colour otherwise. */
+  tagClass?: string;
+  class?: string;
+}
+
+const { locale, tagClass = 'opacity-80', class: className = '' } = Astro.props;
+---
+
+<a
+  href={getRelativeLocaleUrl(locale)}
+  class:list={['flex w-fit items-baseline gap-2.5', className]}
+  lang="en"
+  dir="ltr"
+>
+  <span class="font-logo text-[1.9rem] leading-none font-[420] italic">Moonrose</span>{' '}
+  <span class:list={['text-[10px] font-semibold tracking-[0.3em] uppercase', tagClass]}>Clinic</span>
+</a>

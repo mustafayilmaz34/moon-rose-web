@@ -1,0 +1,47 @@
+---
+import { Image } from 'astro:assets';
+import type { Locale } from '../../i18n/config';
+import { useTranslations } from '../../i18n/ui';
+import { sectionIds } from '../../lib/nav';
+// TEMPORARY stock image from the current site — licence to be confirmed (docs/CONTENT.md).
+import aboutImg from '../../assets/legacy/mins-pciture-scaled.jpg';
+
+interface Props {
+  locale: Locale;
+}
+
+const t = useTranslations(Astro.props.locale);
+const credentials = ['about.cred1', 'about.cred2'] as const;
+---
+
+<section id={sectionIds.about} class="mx-auto max-w-[1320px] px-6 py-20 lg:px-12 lg:py-28">
+  <div class="grid items-center gap-12 lg:grid-cols-12 lg:gap-16">
+    <div class="aspect-[4/3] overflow-hidden rounded-[28px] lg:col-span-5 lg:aspect-[4/5]">
+      <Image
+        src={aboutImg}
+        alt=""
+        widths={[400, 640, 880]}
+        sizes="(min-width: 1024px) 520px, 100vw"
+        class="motion-parallax h-full w-full object-cover"
+      />
+    </div>
+    <div class="motion-reveal lg:col-span-6 lg:col-start-7">
+      <p class="text-accent text-xs font-semibold tracking-[0.22em] uppercase">{t('nav.about')}</p>
+      <h2 class="font-display mt-5 text-4xl leading-[1.1] font-[380] italic lg:text-5xl rtl:leading-[1.4]">
+        {t('about.title')}
+      </h2>
+      <p class="text-muted mt-7 text-lg leading-relaxed">{t('about.body')}</p>
+      <div class="border-line mt-10 border-t pt-8">
+        <p class="text-sm font-semibold">{t('about.credLabel')}</p>
+        <ul class="text-muted mt-4 space-y-3">
+          {credentials.map((key) => (
+            <li class="flex gap-3">
+              <span class="bg-accent mt-2.5 h-px w-5 shrink-0" aria-hidden="true" />
+              {t(key)}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>

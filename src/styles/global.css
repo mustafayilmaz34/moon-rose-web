@@ -1,26 +1,197 @@
 @import 'tailwindcss';
 
+/* Self-hosted fonts (see DESIGN.md → Tipografi). */
+@import '@fontsource-variable/fraunces/opsz-italic.css';
+@import '@fontsource-variable/fraunces/opsz.css';
+@import '@fontsource-variable/montserrat';
+@import '@fontsource-variable/el-messiri';
+@import '@fontsource/ibm-plex-sans-arabic/400.css';
+@import '@fontsource/ibm-plex-sans-arabic/500.css';
+@import '@fontsource/ibm-plex-sans-arabic/600.css';
+
 /*
- * Design tokens. Values are PLACEHOLDERS until the design direction is chosen
- * in Phase 1 — see DESIGN.md. Components must use these tokens, never raw hex.
+ * Design tokens — direction C "Klinik mavisi" (approved). Components use these, never raw hex.
+ * Values are documented in DESIGN.md → Token'lar.
  */
 @theme {
-  --color-surface: #faf7f4;
-  --color-panel: #efe9e3;
-  --color-ink: #1f1b1a;
-  --color-muted: #6b625e;
-  --color-accent: #b9837a;
-  --color-line: #ddd5ce;
+  --color-surface: #ffffff;
+  --color-panel: #eaf2f6;
+  --color-ink: #0f2a4a;
+  --color-muted: #5a6b7d;
+  --color-accent: #0d5c78;
+  --color-line: #d6e3ea;
+  /* Brand colour of WhatsApp — only for the WhatsApp button (Meta brand guidelines). */
+  --color-whatsapp: #25d366;
 
-  --font-display: ui-serif, Georgia, serif;
-  --font-body: ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --font-body: 'Montserrat Variable', ui-sans-serif, system-ui, sans-serif;
+  /* The wordmark stays Latin in every language. */
+  --font-logo: 'Fraunces Variable', ui-serif, Georgia, serif;
 }
 
 /*
  * Arabic font stack. Scoped to <html> only: a bare :lang(ar) would match every
- * element and override font variables set by any wrapper further down the tree.
+ * element and override font variables set further down the tree.
  */
 html:lang(ar) {
-  --font-display: ui-serif, serif;
-  --font-body: ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'El Messiri Variable', ui-serif, serif;
+  --font-body: 'IBM Plex Sans Arabic', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Arabic has no italic; keep display type upright there. */
+html:lang(ar) .italic:not(.font-logo) {
+  font-style: normal;
+}
+
+/*
+ * Button / CTA label: small, bold, spaced capitals (matches the current site's buttons).
+ * Arabic has no case and letter-spacing breaks its joined letterforms, so it gets plain bold text.
+ */
+@utility label-caps {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+.label-caps:lang(ar) {
+  font-size: 0.9375rem;
+}
+/* Same for every tracked eyebrow/label: no letter-spacing on Arabic script. */
+/* :lang() on the element itself, so Latin islands like the logo (lang="en") keep their tracking. */
+.label-caps:lang(ar),
+[class*='tracking-']:lang(ar) {
+  letter-spacing: 0;
+}
+
+/* Sticky header is 5rem tall — keep anchor targets clear of it. */
+html {
+  scroll-padding-top: 6rem;
+}
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/*
+ * Motion. Calm and sparse: hero entrance and scroll-linked reveal/parallax.
+ * Everything is off for prefers-reduced-motion.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes rise {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .motion-rise {
+    animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--d, 0ms);
+  }
+
+  /* WhatsApp: the bubble slides in once, the ring pulses three times, then everything rests. */
+  @keyframes wa-bubble {
+    from {
+      opacity: 0;
+      transform: translateX(var(--wa-shift, 12px)) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes wa-ring {
+    from {
+      opacity: 0.55;
+      transform: scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: scale(1.7);
+    }
+  }
+  .motion-wa-bubble {
+    animation: wa-bubble 600ms cubic-bezier(0.22, 1, 0.36, 1) 1.6s both;
+  }
+  [dir='rtl'] .motion-wa-bubble {
+    --wa-shift: -12px;
+  }
+  .motion-wa-ring {
+    animation: wa-ring 1.8s cubic-bezier(0.22, 1, 0.36, 1) 2.2s 3 both;
+  }
+
+  @supports (animation-timeline: view()) {
+    /*
+     * Longhands + a custom property on purpose: Lightning CSS would otherwise fold these into an
+     * `animation` shorthand containing view(), which is invalid CSS (the timeline is reset-only in the
+     * shorthand) and silently drops the whole declaration.
+     */
+    :root {
+      --scroll-view: view();
+    }
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(28px);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+    @keyframes parallax {
+      from {
+        transform: translateY(6%) scale(1.12);
+      }
+      to {
+        transform: translateY(-6%) scale(1.12);
+      }
+    }
+    .motion-reveal {
+      animation-name: reveal;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--scroll-view);
+      animation-range: entry 5% entry 45%;
+    }
+    .motion-parallax {
+      animation-name: parallax;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--scroll-view);
+      animation-range: cover;
+    }
+
+    /* Hero exit: video slowly scales up while the copy drifts up and fades as the page scrolls. */
+    @keyframes hero-media {
+      to {
+        transform: scale(1.12);
+      }
+    }
+    @keyframes hero-content {
+      to {
+        opacity: 0;
+        transform: translateY(-56px);
+      }
+    }
+    .motion-hero-media {
+      animation-name: hero-media;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--scroll-view);
+      animation-range: exit 0% exit 100%;
+    }
+    .motion-hero-content {
+      animation-name: hero-content;
+      animation-timing-function: linear;
+      animation-fill-mode: both;
+      animation-timeline: var(--scroll-view);
+      animation-range: exit 0% exit 70%;
+    }
+  }
 }

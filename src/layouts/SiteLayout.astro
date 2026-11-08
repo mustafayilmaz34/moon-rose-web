@@ -1,0 +1,29 @@
+---
+// Page chrome shared by every public page: info bar + header, footer, floating WhatsApp.
+import BaseLayout from './BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import WhatsAppFloat from '../components/WhatsAppFloat.astro';
+import type { Locale } from '../i18n/config';
+
+interface Props {
+  locale: Locale;
+  /** Path after the locale prefix, e.g. "tedaviler/botoks/". */
+  path?: string;
+  title?: string;
+  description?: string;
+  /** Page starts with a full-bleed hero the header should float over. */
+  overlayHeader?: boolean;
+}
+
+const { locale, path = '', title, description, overlayHeader = false } = Astro.props;
+---
+
+<BaseLayout locale={locale} path={path} title={title} description={description}>
+  <SiteHeader slot="header" locale={locale} path={path} overlay={overlayHeader} />
+  <slot />
+  <Fragment slot="footer">
+    <SiteFooter locale={locale} />
+    <WhatsAppFloat locale={locale} />
+  </Fragment>
+</BaseLayout>

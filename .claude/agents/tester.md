@@ -21,7 +21,8 @@ Sen Moonrose Clinic web sitesinin test uzmanısın. **Kaynak kodu asla değişti
 
 ## Rapor
 
-`docs/reports/<tarih>-<adım>.md` dosyasına yaz ve aynısını kısa haliyle döndür:
+`docs/reports/<tarih>-<adım>.md` dosyasına yaz, ardından `npx prettier --write docs/reports` çalıştır
+(yoksa `npm run verify` format kontrolünde kalır) ve aynısını kısa haliyle döndür:
 
 ```
 Sonuç: GEÇTİ / KALDI

@@ -1,0 +1,51 @@
+---
+import Logo from './Logo.astro';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+import { sectionIds } from '../lib/nav';
+import { site, whatsappUrl } from '../config/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const year = new Date().getFullYear();
+---
+
+<footer id={sectionIds.contact} class="border-line border-t">
+  <div class="mx-auto grid max-w-[1320px] gap-10 px-6 py-14 sm:grid-cols-2 lg:grid-cols-4 lg:px-12">
+    <div>
+      <Logo locale={locale} tagClass="text-accent" />
+      <p class="text-muted mt-5 max-w-[30ch] text-sm leading-relaxed">{t('footer.note')}</p>
+    </div>
+    <div>
+      <p class="text-sm font-semibold">{t('info.addressLabel')}</p>
+      <p class="text-muted mt-3 text-sm leading-relaxed">{t('info.address')}</p>
+    </div>
+    <div>
+      <p class="text-sm font-semibold">{t('info.hoursLabel')}</p>
+      <p class="text-muted mt-3 text-sm leading-relaxed">
+        {t('info.hours')}
+        <br />
+        {t('info.hoursNote')}
+      </p>
+    </div>
+    <div>
+      <p class="text-sm font-semibold">{t('info.contactLabel')}</p>
+      <!-- Isolate the number's direction only; the block keeps the page direction so it aligns with its label. -->
+      <a href={site.phoneHref} class="text-muted hover:text-accent mt-3 block text-sm">
+        <bdi dir="ltr">{site.phoneDisplay}</bdi>
+      </a>
+      <a href={whatsappUrl} class="text-muted hover:text-accent mt-1 block text-sm">
+        {t('info.contact')}
+      </a>
+    </div>
+  </div>
+  <div class="border-line border-t">
+    <p class="text-muted mx-auto max-w-[1320px] px-6 py-6 text-xs lg:px-12">
+      <span dir="ltr">© {year} Moonrose Clinic</span>
+    </p>
+  </div>
+</footer>

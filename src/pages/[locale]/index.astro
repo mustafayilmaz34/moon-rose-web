@@ -1,22 +1,21 @@
 ---
-// Placeholder home page — replaced in Phase 3 once DESIGN.md is approved.
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
+import Hero from '../../components/home/Hero.astro';
+import About from '../../components/home/About.astro';
+import Treatments from '../../components/home/Treatments.astro';
+import AppointmentBand from '../../components/home/AppointmentBand.astro';
 import { locales, type Locale } from '../../i18n/config';
-import { useTranslations } from '../../i18n/ui';
 
 export function getStaticPaths() {
   return locales.map((locale) => ({ params: { locale } }));
 }
 
 const locale = Astro.params.locale as Locale;
-const t = useTranslations(locale);
 ---
 
-<BaseLayout locale={locale}>
-  <section class="mx-auto flex min-h-svh max-w-3xl flex-col items-start justify-center gap-8 px-6">
-    <LanguageSwitcher locale={locale} />
-    <h1 class="font-display text-4xl">{t('placeholder.title')}</h1>
-    <p>{t('meta.description')}</p>
-  </section>
-</BaseLayout>
+<SiteLayout locale={locale} overlayHeader>
+  <Hero locale={locale} />
+  <About locale={locale} />
+  <Treatments locale={locale} />
+  <AppointmentBand locale={locale} />
+</SiteLayout>

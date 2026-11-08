@@ -3,7 +3,7 @@ import { locales } from '../src/i18n/config';
 
 // Full-page screenshots for visual review by the tester agent. Run with `npm run screens`.
 // Add new routes here as pages are built.
-const routes = ['', 'yonler/a/', 'yonler/b/', 'yonler/c/'];
+const routes = [''];
 
 for (const locale of locales) {
   for (const route of routes) {

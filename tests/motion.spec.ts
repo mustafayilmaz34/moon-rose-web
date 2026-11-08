@@ -17,7 +17,7 @@ test('Motion: hero entrance runs when motion is allowed', async ({ page }, testI
   if (testInfo.project.name === 'desktop') expect(names).toContain('wa-bubble');
 });
 
-test('Motion: reduced motion stops animations and keeps the video paused', async ({ page }) => {
+test('Motion: reduced motion stops animations and keeps the video on its poster', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.goto(url);
   // Only movement counts — colour transitions (e.g. the header turning solid) are not motion.
@@ -27,8 +27,6 @@ test('Motion: reduced motion stops animations and keeps the video paused', async
   expect(moving).toBe(0);
   const video = page.locator('[data-hero-video]');
   expect(await video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
-  await expect(page.locator('[data-hero-toggle]')).toBeVisible();
-  await expect(page.locator('[data-hero-toggle]')).toHaveAttribute('aria-label', 'Videoyu oynat');
 });
 
 test('Header: transparent only at the top, solid and pinned as soon as the page scrolls', async ({

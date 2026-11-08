@@ -1,0 +1,24 @@
+---
+import { getEntry, render } from 'astro:content';
+import PageHeader from '../PageHeader.astro';
+import type { Locale } from '../../i18n/config';
+import { useTranslations } from '../../i18n/ui';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+const entry = await getEntry('pages', `${locale}/privacy`);
+if (!entry) throw new Error(`Missing privacy page for ${locale}`);
+const { Content } = await render(entry);
+---
+
+<PageHeader locale={locale} title={t('privacy.title')} />
+
+<section class="mx-auto max-w-[1320px] px-6 py-16 lg:px-12 lg:py-24">
+  <div class="prose-clinic">
+    <Content />
+  </div>
+</section>

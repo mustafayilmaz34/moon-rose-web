@@ -1,0 +1,38 @@
+---
+// Static hosts serve /404.html for every unknown URL, whatever the language — so this page offers all three.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Logo from '../components/Logo.astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { locales, localeMeta, defaultLocale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+
+const t = useTranslations(defaultLocale);
+---
+
+<BaseLayout locale={defaultLocale} title={t('notFound.title')} noindex>
+  <section class="mx-auto flex min-h-svh max-w-[1320px] flex-col justify-center px-6 py-16 lg:px-12">
+    <Logo locale={defaultLocale} tagClass="text-accent" />
+    <p class="text-accent mt-16 text-xs font-semibold tracking-[0.22em]">404</p>
+    <div class="mt-6 grid gap-12 md:grid-cols-3">
+      {locales.map((l) => {
+        const tl = useTranslations(l);
+        return (
+          <div lang={l} dir={localeMeta[l].dir}>
+            {l === defaultLocale ? (
+              <h1 class="font-display text-4xl font-[380] italic">{tl('notFound.title')}</h1>
+            ) : (
+              <p class="font-display text-4xl font-[380] italic">{tl('notFound.title')}</p>
+            )}
+            <p class="text-muted mt-4 leading-relaxed">{tl('notFound.body')}</p>
+            <a
+              href={getRelativeLocaleUrl(l)}
+              class="bg-ink text-surface hover:bg-accent label-caps mt-8 inline-block rounded-full px-8 py-4 transition-colors"
+            >
+              {tl('notFound.home')}
+            </a>
+          </div>
+        );
+      })}
+    </div>
+  </section>
+</BaseLayout>

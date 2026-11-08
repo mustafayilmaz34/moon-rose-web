@@ -3,6 +3,7 @@ import Logo from './Logo.astro';
 import type { Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/ui';
 import { sectionIds } from '../lib/nav';
+import { routeUrl } from '../i18n/routes';
 import { site, whatsappUrl } from '../config/site';
 
 interface Props {
@@ -44,8 +45,11 @@ const year = new Date().getFullYear();
     </div>
   </div>
   <div class="border-line border-t">
-    <p class="text-muted mx-auto max-w-[1320px] px-6 py-6 text-xs lg:px-12">
+    <div class="text-muted mx-auto flex max-w-[1320px] flex-wrap items-center justify-between gap-4 px-6 py-6 text-xs lg:px-12">
       <span dir="ltr">© {year} Moonrose Clinic</span>
-    </p>
+      <a href={routeUrl(locale, 'privacy')} class="hover:text-accent underline underline-offset-4">
+        {t('footer.privacy')}
+      </a>
+    </div>
   </div>
 </footer>

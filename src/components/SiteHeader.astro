@@ -5,16 +5,17 @@ import LanguageSwitcher from './LanguageSwitcher.astro';
 import type { Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/ui';
 import { mainNav } from '../lib/nav';
+import type { Alternates } from '../i18n/routes';
 import { site, whatsappUrl } from '../config/site';
 
 interface Props {
   locale: Locale;
-  path: string;
+  alternates: Alternates;
   /** Transparent over a full-bleed hero at the top of the page, solid as soon as the page scrolls. */
   overlay?: boolean;
 }
 
-const { locale, path, overlay = false } = Astro.props;
+const { locale, alternates, overlay = false } = Astro.props;
 const t = useTranslations(locale);
 const nav = mainNav(locale);
 ---
@@ -75,7 +76,7 @@ const nav = mainNav(locale);
 
     <div class="flex items-center gap-4 text-sm sm:gap-6">
       <div class="hidden lg:block">
-        <LanguageSwitcher locale={locale} path={path} />
+        <LanguageSwitcher locale={locale} alternates={alternates} />
       </div>
       <a
         href={whatsappUrl}
@@ -142,7 +143,7 @@ const nav = mainNav(locale);
       </ul>
     </nav>
     <div class="mt-auto space-y-6 pt-10">
-      <LanguageSwitcher locale={locale} path={path} />
+      <LanguageSwitcher locale={locale} alternates={alternates} />
       <a href={whatsappUrl} class="bg-ink text-surface label-caps block rounded-full px-6 py-4 text-center">
         {t('cta.appointment')}
       </a>

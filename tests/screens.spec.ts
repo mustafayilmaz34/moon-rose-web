@@ -1,19 +1,27 @@
 import { test } from '@playwright/test';
-import { locales } from '../src/i18n/config';
+import { locales, type Locale } from '../src/i18n/config';
 
 // Full-page screenshots for visual review by the tester agent. Run with `npm run screens`.
-// Add new routes here as pages are built.
-const routes = [''];
+// Mirrors src/i18n/routes.ts — add new pages here as they are built.
+const pages: Record<string, Record<Locale, string>> = {
+  home: { tr: '/tr/', en: '/en/', ar: '/ar/' },
+  treatments: { tr: '/tr/tedaviler/', en: '/en/treatments/', ar: '/ar/treatments/' },
+  treatment: { tr: '/tr/tedaviler/botoks/', en: '/en/treatments/botox/', ar: '/ar/treatments/botox/' },
+  contact: { tr: '/tr/iletisim/', en: '/en/contact/', ar: '/ar/contact/' },
+  privacy: { tr: '/tr/kvkk-gizlilik/', en: '/en/privacy/', ar: '/ar/privacy/' },
+};
 
-for (const locale of locales) {
-  for (const route of routes) {
-    test(`Screens: ${locale}/${route} @screens`, async ({ page }, testInfo) => {
+for (const [name, byLocale] of Object.entries(pages)) {
+  for (const locale of locales) {
+    test(`Screens: ${locale} ${name} @screens`, async ({ page }, testInfo) => {
       // Static captures: motion is reviewed live, not in screenshots.
       await page.emulateMedia({ reducedMotion: 'reduce' });
-      await page.goto(`/${locale}/${route}`);
+      await page.goto(byLocale[locale]);
       await page.evaluate(() => document.fonts.ready);
-      const name = `${locale}-${route.replaceAll('/', '_') || 'home'}-${testInfo.project.name}.png`;
-      await page.screenshot({ path: `test-results/screens/${name}`, fullPage: true });
+      await page.screenshot({
+        path: `test-results/screens/${locale}-${name}-${testInfo.project.name}.png`,
+        fullPage: true,
+      });
     });
   }
 }

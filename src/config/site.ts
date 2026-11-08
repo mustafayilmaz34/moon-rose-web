@@ -8,3 +8,8 @@ export const site = {
 } as const;
 
 export const whatsappUrl = `https://wa.me/${site.whatsappNumber}`;
+
+// A plain link (no embedded map): an embedded Google Map would set cookies before consent.
+export const mapsUrl =
+  'https://www.google.com/maps/search/?api=1&query=' +
+  encodeURIComponent('Erol Kaya Cd. No:179, 34840 Pendik/İstanbul');

@@ -33,3 +33,14 @@ SSS'te ayrıca: Hacamat, Akupunktur
 7. **Hacamat ve Akupunktur** yeni sitede ayrı tedavi olarak yer alsın mı?
 8. **Diller:** TR / EN / AR dışında eklenecek dil var mı? Çevirileri kim kontrol edecek?
 9. Mevcut tedavi yazılarının **metin hakları** kliniğe mi ait (yazar "Grower" görünüyor)?
+10. **KVKK veri sorumlusu:** Mevcut gizlilik metni "Dr. Salih Aygül" ve "drsalihaygul.com" adına yazılmış; site Moonrose
+    Clinic. Veri sorumlusu kim (şahıs mı, şirket mi), açık adres ve e-posta nedir? Metin bir hukukçuya da gösterilmeli.
+11. **Mevcut sitedeki riskli içerik:** Tedavi yazılarında "mucizevi", "kalıcı", "kesin sonuç", "%90 başarı", "en iyi",
+    fiyat başlıkları ve marka adları var (ayrıntı: `docs/content-source/`). Yeni sitede bunlar kullanılmadı; eski site
+    yayında kaldıkça risk sürer.
+12. **Otomatik üretilmiş yazılar:** Blogda ~45 "-ozgun" yazı (bozuk Türkçe), "-2" kopyalar ve "test" taslakları var.
+    Yeni siteye taşınmayacak; eski URL'ler Faz 5'te uygun sayfalara yönlendirilecek.
+13. **Diğer 5 tedavi** (Yüz Germe, Yüz İnceltme, Lipoliz, Selülit, Cilt Gençleştirme) yeni sitede yer alsın mı?
+14. **"Gençlik Aşısı" adı:** Mevcut sitede kullanılan hizmet adı yeni sitede de korundu. Ancak "aşı" kelimesi tıbbi bir
+    aşı izlenimi verebilir, "gençlik" de sonuç vaadi çağrıştırabilir. "Cilt Yenileme / Eksozom" gibi bir ad tercih
+    edilsin mi? (Tester raporu: `docs/reports/2026-11-08-faz3-sayfalar.md`)

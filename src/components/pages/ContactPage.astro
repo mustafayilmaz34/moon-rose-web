@@ -1,0 +1,87 @@
+---
+// No contact form yet (needs a form service) and no embedded map (cookies before consent) — see PLAN.md.
+import PageHeader from '../PageHeader.astro';
+import Icon from '../Icon.astro';
+import type { Locale } from '../../i18n/config';
+import { useTranslations } from '../../i18n/ui';
+import { site, whatsappUrl, mapsUrl } from '../../config/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<PageHeader locale={locale} title={t('contact.title')} lead={t('contact.lead')} />
+
+<section class="mx-auto max-w-[1320px] px-6 py-16 lg:px-12 lg:py-24">
+  <div class="grid gap-6 md:grid-cols-2">
+    <!-- Brand green only behind the glyph: white text on #25d366 is ~2:1 and fails contrast. -->
+    <a
+      href={whatsappUrl}
+      class="bg-panel text-ink group flex items-center justify-between gap-6 rounded-[28px] p-8 lg:p-10"
+    >
+      <span>
+        <span class="label-caps text-accent block">WhatsApp</span>
+        <span class="font-display mt-3 block text-3xl italic">{t('contact.whatsappCta')}</span>
+      </span>
+      <span class="bg-whatsapp text-surface grid size-16 shrink-0 place-items-center rounded-full transition-transform group-hover:scale-110">
+        <Icon name="whatsapp" class="size-8" />
+      </span>
+    </a>
+    <a
+      href={site.phoneHref}
+      class="bg-ink text-surface group flex items-center justify-between gap-6 rounded-[28px] p-8 lg:p-10"
+    >
+      <span>
+        <span class="label-caps block opacity-80">{t('contact.callCta')}</span>
+        <bdi dir="ltr" class="mt-3 block text-2xl font-light whitespace-nowrap sm:text-3xl">
+          {site.phoneDisplay}
+        </bdi>
+      </span>
+      <Icon name="phone" class="size-9 shrink-0 transition-transform group-hover:scale-110" />
+    </a>
+  </div>
+
+  <dl class="border-line mt-16 grid gap-10 border-t pt-12 md:grid-cols-3">
+    <div>
+      <dt class="text-accent flex items-center gap-2 text-xs font-semibold tracking-[0.22em] uppercase">
+        <Icon name="pin" />
+        {t('info.addressLabel')}
+      </dt>
+      <dd class="mt-4 text-lg leading-relaxed">{t('info.address')}</dd>
+      <dd class="mt-3">
+        <a
+          href={mapsUrl}
+          rel="noopener"
+          target="_blank"
+          class="text-accent inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-4"
+        >
+          {t('contact.map')}
+          <Icon name="arrow" class="size-4 rtl:-scale-x-100" />
+        </a>
+      </dd>
+    </div>
+    <div>
+      <dt class="text-accent flex items-center gap-2 text-xs font-semibold tracking-[0.22em] uppercase">
+        <Icon name="clock" />
+        {t('info.hoursLabel')}
+      </dt>
+      <dd class="mt-4 text-lg leading-relaxed">{t('info.hours')}</dd>
+      <dd class="text-muted mt-1">{t('info.hoursNote')}</dd>
+    </div>
+    <div>
+      <dt class="text-accent flex items-center gap-2 text-xs font-semibold tracking-[0.22em] uppercase">
+        <Icon name="phone" />
+        {t('info.phoneLabel')}
+      </dt>
+      <dd class="mt-4 text-lg">
+        <a href={site.phoneHref} class="hover:text-accent">
+          <bdi dir="ltr">{site.phoneDisplay}</bdi>
+        </a>
+      </dd>
+    </div>
+  </dl>
+</section>

@@ -4,6 +4,7 @@ import Hero from '../../components/home/Hero.astro';
 import About from '../../components/home/About.astro';
 import Treatments from '../../components/home/Treatments.astro';
 import AppointmentBand from '../../components/home/AppointmentBand.astro';
+import Faq from '../../components/home/Faq.astro';
 import { locales, type Locale } from '../../i18n/config';
 
 export function getStaticPaths() {
@@ -17,5 +18,6 @@ const locale = Astro.params.locale as Locale;
   <Hero locale={locale} />
   <About locale={locale} />
   <Treatments locale={locale} />
+  <Faq locale={locale} />
   <AppointmentBand locale={locale} />
 </SiteLayout>

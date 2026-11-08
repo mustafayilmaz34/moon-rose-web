@@ -30,7 +30,19 @@ for (const locale of locales) {
     });
 
     test('language switcher marks the current language', async ({ page }) => {
-      await expect(page.locator(`nav a[aria-current="true"][hreflang="${locale}"]`)).toBeVisible();
+      // On small screens the switcher lives in the mobile menu.
+      const menuButton = page.locator('[data-menu-open]');
+      if (await menuButton.isVisible()) await menuButton.click();
+      await expect(page.locator(`a[aria-current="true"][hreflang="${locale}"]:visible`)).toHaveCount(1);
+    });
+
+    test('main navigation points at sections that exist', async ({ page }) => {
+      const hrefs = await page
+        .locator('[data-site-header] nav a, [data-menu] nav a')
+        .evaluateAll((links) => links.map((a) => new URL((a as HTMLAnchorElement).href).hash));
+      for (const hash of new Set(hrefs.filter((h) => h && h !== '#sss'))) {
+        await expect(page.locator(hash), `section ${hash}`).toHaveCount(1);
+      }
     });
 
     test('has no horizontal overflow', async ({ page }) => {

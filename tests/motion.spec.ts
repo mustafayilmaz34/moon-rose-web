@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
-// Direction C preview page (temporary) — motion must run normally and be fully off for reduced motion.
-const url = '/tr/yonler/c/';
+// Home page — motion must run normally and be fully off for reduced motion.
+const url = '/tr/';
 
 test('Motion: hero entrance runs when motion is allowed', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'no-preference' });
@@ -9,7 +9,7 @@ test('Motion: hero entrance runs when motion is allowed', async ({ page }) => {
   const names = await page.evaluate(() =>
     document.getAnimations().map((a) => (a as CSSAnimation).animationName),
   );
-  expect(names).toContain('c-rise');
+  expect(names).toContain('rise');
 });
 
 test('Motion: reduced motion stops animations and keeps the video paused', async ({ page }) => {
@@ -26,13 +26,22 @@ test('Motion: reduced motion stops animations and keeps the video paused', async
   await expect(page.locator('[data-hero-toggle]')).toHaveAttribute('aria-label', 'Videoyu oynat');
 });
 
-test('Header: transparent over the hero, solid after scrolling past it', async ({ page }) => {
+test('Header: transparent only at the top, solid and pinned as soon as the page scrolls', async ({
+  page,
+}) => {
   await page.goto(url);
   const header = page.locator('[data-site-header]');
   await expect(header).not.toHaveAttribute('data-solid');
+
+  // A small scroll is enough — hero text must never pass under a transparent header.
+  await page.mouse.wheel(0, 120);
+  await expect(header).toHaveAttribute('data-solid', '');
+  await expect.poll(() => header.evaluate((el) => el.getBoundingClientRect().top)).toBe(0);
+
   await page.mouse.wheel(0, 2000);
   await expect(header).toHaveAttribute('data-solid', '');
-  await expect(header).toBeInViewport();
+  await expect.poll(() => header.evaluate((el) => el.getBoundingClientRect().top)).toBe(0);
+
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(header).not.toHaveAttribute('data-solid');
 });

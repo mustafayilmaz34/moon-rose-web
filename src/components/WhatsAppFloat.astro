@@ -1,0 +1,29 @@
+---
+import Icon from './Icon.astro';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+import { whatsappUrl } from '../config/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const t = useTranslations(Astro.props.locale);
+// The accessible name must contain the visible bubble text (WCAG 2.5.3 Label in Name).
+---
+
+<a
+  href={whatsappUrl}
+  aria-label={`${t('whatsapp.bubble')} — WhatsApp`}
+  class="group fixed end-5 bottom-5 z-30 flex items-center gap-3"
+>
+  <span
+    class="bg-surface text-ink hidden rounded-full px-4 py-2.5 text-sm font-semibold shadow-[0_10px_30px_-12px_rgb(15_42_74/0.45)] lg:block"
+    aria-hidden="true"
+  >
+    {t('whatsapp.bubble')}
+  </span>
+  <span class="bg-accent text-surface group-hover:bg-ink grid size-14 place-items-center rounded-full shadow-[0_10px_30px_-10px_rgb(15_42_74/0.5)] transition-colors">
+    <Icon name="whatsapp" class="size-6" />
+  </span>
+</a>

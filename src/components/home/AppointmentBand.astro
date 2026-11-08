@@ -1,0 +1,28 @@
+---
+import type { Locale } from '../../i18n/config';
+import { useTranslations } from '../../i18n/ui';
+import { whatsappUrl } from '../../config/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const t = useTranslations(Astro.props.locale);
+---
+
+<section class="mx-auto max-w-[1320px] px-6 py-20 lg:px-12 lg:py-24">
+  <div class="bg-ink text-surface flex flex-col items-start justify-between gap-8 rounded-[32px] px-8 py-12 md:flex-row md:items-center lg:px-16 lg:py-16">
+    <div>
+      <h2 class="font-display text-3xl leading-tight font-[380] italic lg:text-[2.75rem] rtl:leading-[1.4]">
+        {t('band.title')}
+      </h2>
+      <p class="mt-4 opacity-75">{t('band.body')}</p>
+    </div>
+    <a
+      href={whatsappUrl}
+      class="bg-surface text-ink hover:bg-panel label-caps shrink-0 rounded-full px-9 py-4.5 transition-colors"
+    >
+      {t('cta.appointment')}
+    </a>
+  </div>
+</section>

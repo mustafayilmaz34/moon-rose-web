@@ -18,24 +18,24 @@ Durum: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti (kullanıcı onaylad�
 - [ ] Mevcut sitenin tam içerik envanteri → `docs/CONTENT.md` (metinler, tedavi yazıları, SSS)
 - [ ] Müşteri sorularının yanıtları (bkz. `docs/CONTENT.md`)
 - [ ] Fotoğraf ve logo teslimi
-- [ ] Moodboard: 4–6 referans site, notlarla
-- [~] A ve B yönleri: ana sayfa üst bölümü, iki çalışan önizleme → `/tr/yonler/a/`, `/tr/yonler/b/`
-- [~] C yönü (mevcut siteye yakın, tam ana sayfa, geçici eski görsellerle) → `/tr/yonler/c/`
+- [x] ~~Moodboard~~ — atlandı; mevcut site referans alındı
+- [x] A, B, C yönleri denendi; A ve B silindi (git geçmişinde: `b327d20`)
+- [x] **Yön seçimi: C — "Klinik mavisi"** (kullanıcı onayı)
   - Görseller `src/assets/legacy/` — mevcut sitedeki stok görseller; lisans müşteriyle teyit edilecek.
     `doktor-salih-gul-min.jpg` doktor DEĞİL (hasta fotoğrafı); `4-genclik-asisi.jpeg` önce/sonra — kullanılmıyor.
-  - Hero: mevcut sitenin arka plan videosu (`public/media/hero-loop.mp4`) — kullanıcı onayıyla kullanılıyor.
-    Google Veo ile üretilmiş, sağ altta filigran var; **filigran kırpılarak gizlenmez.** Müşteriye bildirilecek.
-    Durdur/oynat butonu (WCAG 2.2.2); `prefers-reduced-motion`'da video oynamaz, kapak karesi görünür.
-  - CSS hareket: hero açılışı, kaydırmayla belirme/parallax (`prefers-reduced-motion`'da kapalı).
-  - Bilinen eksikler (Faz 2'de): mobil menü + mobilde dil seçici; AR'de Latin logo Amiri fontuna düşüyor
-- [ ] **Kullanıcı / müşteri yön seçimi**
+  - Hero videosu (`public/media/hero-loop.mp4`) kullanıcı onayıyla kullanılıyor. Google Veo ile üretilmiş,
+    filigranlı; **filigran kırpılarak gizlenmez.** Müşteriye bildirilecek.
 
 ## Faz 2 — Tasarım sistemi
 
-- [ ] Kesin token'lar (renk, font, boşluk, radius) → `global.css` + `DESIGN.md`
-- [ ] Font kurulumu (Latin + Arapça, self-host)
-- [ ] Temel bileşenler: Button, Container, Section, Heading, Header, Footer, LanguageSwitcher, WhatsApp butonu
-- [ ] `/styleguide` sayfası (yalnızca geliştirmede) — **kullanıcı onayı**
+- [x] Kesin token'lar → `global.css` + `DESIGN.md`
+- [x] Font kurulumu: Fraunces, Manrope, El Messiri, IBM Plex Sans Arabic (self-host); kullanılmayanlar kaldırıldı
+- [x] Bileşenler: SiteLayout, SiteHeader (bilgi şeridi, şeffaf/yapışkan header, `<dialog>` mobil menü),
+      SiteFooter, WhatsAppFloat, Logo, Icon, ana sayfa bölümleri (Hero, About, Treatments, AppointmentBand)
+- [x] Gerçek ana sayfa `/[locale]/`; deneme sayfaları silindi
+- [x] Testler: mobil menü, nav çapaları, hareket, header; axe ihlalleri (logo ve WhatsApp adı) düzeltildi
+- [ ] ~~`/styleguide`~~ — gerek kalmadı; ana sayfa referans
+- [ ] **Kullanıcı onayı**
 
 ## Faz 3 — Sayfalar
 

@@ -1,0 +1,196 @@
+---
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+import type { Locale } from '../i18n/config';
+import { useTranslations } from '../i18n/ui';
+import { mainNav } from '../lib/nav';
+import { site, whatsappUrl } from '../config/site';
+
+interface Props {
+  locale: Locale;
+  path: string;
+  /** Transparent over a full-bleed hero at the top of the page, solid as soon as the page scrolls. */
+  overlay?: boolean;
+}
+
+const { locale, path, overlay = false } = Astro.props;
+const t = useTranslations(locale);
+const nav = mainNav(locale);
+---
+
+<!-- Info bar -->
+<div class="bg-ink text-surface text-sm">
+  <div class="mx-auto flex max-w-[1320px] items-center justify-between gap-6 px-6 py-2.5 lg:px-12">
+    <div class="flex items-center gap-8">
+      <p class="hidden items-center gap-2 opacity-85 md:flex">
+        <Icon name="pin" class="size-4 shrink-0" />
+        {t('info.address')}
+      </p>
+      <p class="hidden items-center gap-2 opacity-85 lg:flex">
+        <Icon name="clock" class="size-4 shrink-0" />
+        {t('info.hours')} · {t('info.hoursNote')}
+      </p>
+    </div>
+    <div class="flex items-center gap-5">
+      <a href={site.phoneHref} class="flex items-center gap-2 font-semibold hover:opacity-80" dir="ltr">
+        <Icon name="phone" />
+        {site.phoneDisplay}
+      </a>
+      {site.instagramUrl && (
+        <a href={site.instagramUrl} aria-label="Instagram" class="hover:opacity-80">
+          <Icon name="instagram" />
+        </a>
+      )}
+    </div>
+  </div>
+</div>
+
+<header
+  data-site-header
+  data-overlay={overlay ? '' : undefined}
+  data-solid={overlay ? undefined : ''}
+  class="group/hdr text-surface data-solid:bg-surface data-solid:text-ink data-solid:border-line border-surface/20 sticky top-0 z-40 h-20 border-b transition-colors duration-300 data-solid:shadow-[0_6px_24px_-18px_rgb(15_42_74/0.5)]"
+>
+  <div class="mx-auto flex h-full max-w-[1320px] items-center justify-between gap-6 px-6 lg:px-12">
+    <Logo
+      locale={locale}
+      tagClass="opacity-80 group-data-solid/hdr:text-accent group-data-solid/hdr:opacity-100"
+    />
+
+    <nav aria-label={t('a11y.mainNav')} class="hidden lg:block">
+      <ul class="flex gap-9 text-[15px] font-semibold">
+        {nav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              class="group-data-solid/hdr:hover:text-accent opacity-90 transition-opacity hover:opacity-100"
+            >
+              {t(item.key)}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="flex items-center gap-4 text-sm sm:gap-6">
+      <div class="hidden lg:block">
+        <LanguageSwitcher locale={locale} path={path} />
+      </div>
+      <a
+        href={whatsappUrl}
+        class="bg-surface text-ink group-data-solid/hdr:bg-ink group-data-solid/hdr:text-surface hover:bg-panel group-data-solid/hdr:hover:bg-accent label-caps hidden rounded-full px-7 py-3.5 transition-colors sm:block"
+      >
+        {t('cta.appointment')}
+      </a>
+      <button
+        type="button"
+        data-menu-open
+        aria-haspopup="dialog"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        aria-label={t('a11y.openMenu')}
+        class="border-surface/40 group-data-solid/hdr:border-line grid size-11 place-items-center rounded-full border lg:hidden"
+      >
+        <Icon name="menu" class="size-5 rtl:-scale-x-100" />
+      </button>
+    </div>
+  </div>
+</header>
+<noscript>
+  <style>
+    [data-site-header] {
+      background: var(--color-surface);
+      color: var(--color-ink);
+    }
+  </style>
+</noscript>
+
+<!-- Mobile menu: native <dialog> gives focus trapping, Esc and inert background for free. -->
+<dialog
+  id="mobile-menu"
+  data-menu
+  aria-label={t('a11y.mainNav')}
+  class="bg-surface text-ink m-0 h-dvh max-h-none w-full max-w-none p-0 backdrop:bg-transparent"
+>
+  <div class="flex h-full flex-col px-6 pb-8">
+    <div class="flex h-20 items-center justify-between">
+      <Logo locale={locale} tagClass="text-accent" />
+      <button
+        type="button"
+        data-menu-close
+        aria-label={t('a11y.closeMenu')}
+        class="border-line grid size-11 place-items-center rounded-full border"
+      >
+        <Icon name="close" class="size-5" />
+      </button>
+    </div>
+    <nav aria-label={t('a11y.mainNav')} class="mt-8">
+      <ul class="space-y-1">
+        {nav.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              data-menu-link
+              class="font-display border-line flex items-center justify-between border-b py-4 text-3xl italic"
+            >
+              {t(item.key)}
+              <Icon name="arrow" class="text-accent size-5 rtl:-scale-x-100" />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+    <div class="mt-auto space-y-6 pt-10">
+      <LanguageSwitcher locale={locale} path={path} />
+      <a href={whatsappUrl} class="bg-ink text-surface label-caps block rounded-full px-6 py-4 text-center">
+        {t('cta.appointment')}
+      </a>
+      <a href={site.phoneHref} class="text-muted flex items-center justify-center gap-2 text-sm" dir="ltr">
+        <Icon name="phone" />
+        {site.phoneDisplay}
+      </a>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  // Header: transparent only at the very top of an overlay-hero page; solid as soon as the page
+  // scrolls, so hero text never slides underneath transparent nav text.
+  const header = document.querySelector<HTMLElement>('[data-site-header][data-overlay]');
+  if (header) {
+    let ticking = false;
+    const update = () => {
+      header.toggleAttribute('data-solid', window.scrollY > 8);
+      ticking = false;
+    };
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          ticking = true;
+          requestAnimationFrame(update);
+        }
+      },
+      { passive: true },
+    );
+    update(); // also covers reloads that restore a scrolled position
+  }
+
+  // Mobile menu
+  const menu = document.querySelector<HTMLDialogElement>('[data-menu]');
+  const openBtn = document.querySelector<HTMLButtonElement>('[data-menu-open]');
+  if (menu && openBtn) {
+    openBtn.addEventListener('click', () => {
+      menu.showModal();
+      openBtn.setAttribute('aria-expanded', 'true');
+    });
+    menu.addEventListener('close', () => openBtn.setAttribute('aria-expanded', 'false'));
+    menu.querySelector('[data-menu-close]')?.addEventListener('click', () => menu.close());
+    menu
+      .querySelectorAll('[data-menu-link]')
+      .forEach((link) => link.addEventListener('click', () => menu.close()));
+    // Close if the viewport grows past the mobile breakpoint while open.
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => e.matches && menu.close());
+  }
+</script>

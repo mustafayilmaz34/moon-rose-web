@@ -15,9 +15,8 @@ const tr = {
   'a11y.languageSwitcher': 'Dil seçimi',
   'a11y.skipToContent': 'İçeriğe geç',
   'a11y.mainNav': 'Ana menü',
-  'placeholder.title': 'Yeni sitemiz hazırlanıyor',
-  'photo.placeholder': 'Fotoğraf — hekim portresi',
-  'photo.placeholderClinic': 'Fotoğraf — klinik iç mekân',
+  'a11y.openMenu': 'Menüyü aç',
+  'a11y.closeMenu': 'Menüyü kapat',
 
   'hero.eyebrow': 'Medikal Estetik · Pendik, İstanbul',
   'hero.title': 'Yüzünüz, en dinlenmiş haliyle.',
@@ -60,7 +59,6 @@ const tr = {
   'info.phoneLabel': 'Telefon',
   'footer.note':
     'Sitedeki bilgiler yalnızca bilgilendirme amaçlıdır; tedavi kararı hekim muayenesiyle verilir.',
-  'a11y.whatsapp': 'WhatsApp ile yazın',
   'a11y.pauseVideo': 'Videoyu durdur',
   'whatsapp.bubble': 'Randevu için bize yazın',
   'a11y.playVideo': 'Videoyu oynat',
@@ -83,9 +81,8 @@ const en: Dictionary = {
   'a11y.languageSwitcher': 'Language',
   'a11y.skipToContent': 'Skip to content',
   'a11y.mainNav': 'Main menu',
-  'placeholder.title': 'Our new website is on its way',
-  'photo.placeholder': 'Photo — physician portrait',
-  'photo.placeholderClinic': 'Photo — clinic interior',
+  'a11y.openMenu': 'Open menu',
+  'a11y.closeMenu': 'Close menu',
 
   'hero.eyebrow': 'Medical Aesthetics · Pendik, Istanbul',
   'hero.title': 'Your face, at its most rested.',
@@ -128,7 +125,6 @@ const en: Dictionary = {
   'info.phoneLabel': 'Phone',
   'footer.note':
     'Information on this site is for general purposes only; treatment decisions are made after a physician’s consultation.',
-  'a11y.whatsapp': 'Message us on WhatsApp',
   'a11y.pauseVideo': 'Pause video',
   'whatsapp.bubble': 'Message us to book',
   'a11y.playVideo': 'Play video',
@@ -147,9 +143,8 @@ const ar: Dictionary = {
   'a11y.languageSwitcher': 'اللغة',
   'a11y.skipToContent': 'انتقل إلى المحتوى',
   'a11y.mainNav': 'القائمة الرئيسية',
-  'placeholder.title': 'موقعنا الجديد قيد الإعداد',
-  'photo.placeholder': 'صورة — صورة الطبيب',
-  'photo.placeholderClinic': 'صورة — داخل العيادة',
+  'a11y.openMenu': 'فتح القائمة',
+  'a11y.closeMenu': 'إغلاق القائمة',
 
   'hero.eyebrow': 'طب التجميل · بنديك، إسطنبول',
   'hero.title': 'وجهك، في أكثر حالاته راحة.',
@@ -191,7 +186,6 @@ const ar: Dictionary = {
 
   'info.phoneLabel': 'الهاتف',
   'footer.note': 'المعلومات الواردة في الموقع لأغراض التوعية فقط؛ ويُتخذ قرار العلاج بعد فحص الطبيب.',
-  'a11y.whatsapp': 'راسلنا عبر واتساب',
   'a11y.pauseVideo': 'إيقاف الفيديو',
   'whatsapp.bubble': 'راسلنا لحجز موعد',
   'a11y.playVideo': 'تشغيل الفيديو',

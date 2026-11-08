@@ -25,6 +25,15 @@ jobs:
       - run: npm run check
       - run: npx playwright install --with-deps chromium
       - run: npm run test
+      # Playwright's webServer already built dist/. Lighthouse CI fails the job if accessibility,
+      # best practices or SEO drop below the thresholds in lighthouserc.cjs (performance only warns).
+      - run: npm run lighthouse
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lighthouse-reports
+          path: .lighthouseci/
+          retention-days: 14
       - uses: actions/upload-artifact@v4
         if: failure()
         with:

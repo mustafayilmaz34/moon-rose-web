@@ -19,9 +19,10 @@ const entries = await treatmentsFor(locale);
 
 <section class="mx-auto max-w-[1320px] px-6 py-16 lg:px-12 lg:py-24">
   <ul class="grid gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-    {entries.map((entry) => (
-      <li class="motion-reveal">
-        <TreatmentCard locale={locale} entry={entry} as="h2" />
+    {entries.map((entry, i) => (
+      // First card is usually the LCP: no reveal animation, high-priority image.
+      <li class={i === 0 ? undefined : 'motion-reveal'}>
+        <TreatmentCard locale={locale} entry={entry} as="h2" priority={i === 0} />
       </li>
     ))}
   </ul>

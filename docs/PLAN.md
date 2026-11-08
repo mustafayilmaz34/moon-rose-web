@@ -55,9 +55,16 @@ Durum: `[ ]` bekliyor · `[~]` devam ediyor · `[x]` bitti (kullanıcı onaylad�
 
 ## Faz 4 — Test ve cilalama
 
-- [ ] Tüm sayfalar × 3 dil × 2 ekran: görsel kontrol
-- [ ] Lighthouse CI (performans, erişilebilirlik, SEO ≥ 90)
-- [ ] Yapılandırılmış veri (schema.org `MedicalClinic`, `Physician`)
+- [x] Açılır menüler: dil (çok dile ölçeklenir) ve tedaviler; mobilde alt liste
+- [x] SEO: Open Graph / Twitter kartları (1200×630), `og:locale`, theme-color, kliniğe özel favicon + Apple ikonu,
+      `robots.txt` (sitemap'i `site`'tan alır)
+- [x] Yapılandırılmış veri: `MedicalClinic` (adres, telefon, saatler, diller) her sayfada; `FAQPage` ana sayfada;
+      `BreadcrumbList` iç sayfalarda
+- [x] Lighthouse (mobil): tüm şablonlarda erişilebilirlik/en iyi uygulamalar/SEO 100, performans 94–100.
+      Ana sayfa 68 → 95: hero kapak karesi yüksek öncelikli `<img>`, tedaviler listesinde ilk kart öncelikli
+- [x] Lighthouse CI GitHub Actions'ta (eşikler `lighthouserc.cjs`; raporlar artifact)
+- [x] Vercel yapılandırması (`vercel.json`) ve rehber (`docs/DEPLOY.md`)
+- [ ] **Vercel'i GitHub'a bağlama — kullanıcı** (hesap/giriş)
 - [ ] Çeviri kontrolü (anadili konuşan) — müşteri tarafı
 
 ## Faz 5 — Yayın

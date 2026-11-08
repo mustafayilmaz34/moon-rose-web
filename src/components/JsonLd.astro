@@ -1,0 +1,13 @@
+---
+// schema.org structured data. "<" is escaped so content can never close the script tag.
+interface Props {
+  data: Record<string, unknown>;
+}
+
+const json = JSON.stringify({ '@context': 'https://schema.org', ...Astro.props.data }).replace(
+  /</g,
+  '\\u003c',
+);
+---
+
+<script type="application/ld+json" set:html={json} />

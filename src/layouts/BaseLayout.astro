@@ -4,6 +4,10 @@ import { getAbsoluteLocaleUrl } from 'astro:i18n';
 import { locales, localeMeta, defaultLocale, type Locale } from '../i18n/config';
 import { useTranslations } from '../i18n/ui';
 import { sameAlternates, type Alternates } from '../i18n/routes';
+import { getImage } from 'astro:assets';
+import JsonLd from '../components/JsonLd.astro';
+import { site } from '../config/site';
+import socialImage from '../assets/legacy/hero-poster.jpg';
 
 interface Props {
   locale: Locale;
@@ -20,6 +24,37 @@ const t = useTranslations(locale);
 const { dir } = localeMeta[locale];
 const pageTitle = title ? `${title} | ${t('meta.siteName')}` : t('meta.siteName');
 const pageDescription = description ?? t('meta.description');
+const canonical = getAbsoluteLocaleUrl(locale, alternates[locale]);
+// Social card: 1200×630 crop of the hero frame. TEMPORARY until real clinic photography exists.
+const og = await getImage({ src: socialImage, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+const ogImage = new URL(og.src, Astro.site).href;
+
+// Sitewide organisation data so search engines know this is a medical clinic, where and when.
+const clinic = {
+  '@type': 'MedicalClinic',
+  '@id': new URL('/#clinic', Astro.site).href,
+  name: site.name,
+  url: getAbsoluteLocaleUrl(locale),
+  image: ogImage,
+  telephone: site.phoneE164,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.district,
+    addressRegion: site.address.city,
+    postalCode: site.address.postalCode,
+    addressCountry: site.address.country,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: site.openingHours.days,
+      opens: site.openingHours.opens,
+      closes: site.openingHours.closes,
+    },
+  ],
+  availableLanguage: locales.map((l) => localeMeta[l].hreflang),
+};
 ---
 
 <!doctype html>
@@ -28,11 +63,28 @@ const pageDescription = description ?? t('meta.description');
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content={site.themeColor} />
     <title>{pageTitle}</title>
     <meta name="description" content={pageDescription} />
     {noindex && <meta name="robots" content="noindex" />}
-    <link rel="canonical" href={getAbsoluteLocaleUrl(locale, alternates[locale])} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDescription} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={localeMeta[locale].og} />
+    {locales
+      .filter((l) => l !== locale)
+      .map((l) => (
+        <meta property="og:locale:alternate" content={localeMeta[l].og} />
+      ))}
+    <meta name="twitter:card" content="summary_large_image" />
+    <JsonLd data={clinic} />
     {locales.map((l) => (
       <link rel="alternate" hreflang={localeMeta[l].hreflang} href={getAbsoluteLocaleUrl(l, alternates[l])} />
     ))}
